@@ -1,7 +1,7 @@
 # Личный проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
-* Студент: [Бондаренко Денис](https://up.htmlacademy.ru/ecmascript/8/user/952649).
-* Наставник: `Неизвестно`.
+- Студент: [Бондаренко Денис](https://up.htmlacademy.ru/ecmascript/8/user/952649).
+- Наставник: `Мисюрин Роман`.
 
 ---
 
