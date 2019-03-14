@@ -1,10 +1,10 @@
 export const trips =
   [
     {
-      name: `Taxi to Airport`,
+      title: `Taxi to Airport`,
       icon: `🚗`,
-      timeBegin: `10:00`,
-      timeEnd: `11:00`,
+      timetable: `10:00 - 11:00`,
+      duration: `1h 30m`,
       price: 20,
       currency: `€`,
       offers: [

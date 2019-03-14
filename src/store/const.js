@@ -1,4 +1,4 @@
 
-export const mainFilter = document.getElementsByClassName(`trip-filter`)[0];
-export const boardTrips = document.getElementsByClassName(`trip-day__items`)[0];
+export const mainFilter = document.querySelector(`.trip-filter`);
+export const boardTrips = document.querySelector(`.trip-day__items`);
 
