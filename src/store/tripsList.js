@@ -49,7 +49,17 @@ export const trips = () =>(
         price: 20,
         currency: `€`,
       },
-    ],
+      {
+        name: `Сhoose a flight attendant`,
+        price: 40,
+        currency: `€`,
+      },
+      {
+        name: `Сhoose place near the driver`,
+        price: 50,
+        currency: `€`,
+      },
+    ].sort(),
     about: new Set([
       `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
       `Cras aliquet varius magna, non porta ligula feugiat eget.`,

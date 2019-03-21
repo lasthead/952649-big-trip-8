@@ -13,3 +13,7 @@ export const timeFormatter = (timestamp) => {
   let date = new Date(timestamp);
   return date.toLocaleTimeString(`en-US`, {hour: `numeric`, minute: `numeric`});
 };
+
+export const getRandomNumberRange = (min, max) => {
+  return Math.random() * (max - min) + min;
+};
