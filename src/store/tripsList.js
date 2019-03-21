@@ -2,22 +2,32 @@ export const trips =
   [
     {
       title: `Taxi to Airport`,
-      icon: {
-        Taxi: `🚕`,
-        Bus: `🚌`,
-        Train: `🚂`,
-        Ship: `🛳️`,
-        Transport: `🚊`,
-        Drive: `🚗`,
-        Flight: `✈️`,
-        CheckIn: `🏨`,
-        Sightseeing: `🏛️`,
-        Restaurant: `🍴`
-      },
+      type: [
+        {name: `Taxi`, icon: `🚕`},
+        {name: `Bus`, icon: `🚌`},
+        {name: `Train`, icon: `🚂`},
+        {name: `Ship`, icon: `🛳`},
+        {name: `Transport`, icon: `🚊`},
+        {name: `Drive`, icon: `🚗`},
+        {name: `Flight`, icon: `✈️`},
+        {name: `Check-in`, icon: `🏨`},
+        {name: `Sightseeing`, icon: `🏛️`},
+        {name: `Restaurant`, icon: `🍴`},
+      ][Math.floor(Math.random() * 10)],
+      destinations:
+        [
+          `Amsterdam`,
+          `Geneva`,
+          `Chamonix`,
+          `Athens`,
+          `Atlanta`,
+          `Airport`,
+          `Barcelona`,
+          `Bali`,
+          `Berlin`,
+          `Vancouver`
+        ][Math.floor(Math.random() * 10)],
       picture: `http://picsum.photos/300/150?r=${Math.random()}`,
-      timetable: `10:00 - 11:00`,
-      duration: `1h 30m`,
-      price: 20,
       currency: `€`,
       offers: [
         {
@@ -51,6 +61,16 @@ export const trips =
         `Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.`,
         `Sed sed nisi sed augue convallis suscipit in sed felis.`,
         `Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus.`,
-        `In rutrum ac purus sit amet tempus`]),
+        `In rutrum ac purus sit amet tempus`
+      ]),
+      dateFrom: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
+      dateTo: Date.now() + 1 + Math.floor(Math.random() * 8) * 24 * 60 * 60 * 1000,
+      price: [
+        `20`,
+        `50`,
+        `120`,
+        `150`,
+        `200`
+      ][Math.floor(Math.random() * 5)],
     },
   ];
