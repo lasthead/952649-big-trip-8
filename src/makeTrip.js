@@ -1,22 +1,18 @@
 
+import {timeFormatter} from './store/const';
+import tripOffers from './components/tripComponents/tripOffers';
 
-export default ({icon, title, timetable, duration, price, currency}) => `
+export default ({type, destinations, dateFrom, dateTo, price, currency, offers}) => `
     <article class="trip-point">
-      <i class="trip-icon">${ icon }</i>
-      <h3 class="trip-point__title">${ title }</h3>
+      <i class="trip-icon">${ type.icon }</i>
+      <h3 class="trip-point__title">${ type.name } to ${ destinations }</h3>
       <p class="trip-point__schedule">
-        <span class="trip-point__timetable">${ timetable }</span>
-        <span class="trip-point__duration">${ duration }</span>
+        <span class="trip-point__timetable">${ timeFormatter(dateFrom) }</span>
+        <span class="trip-point__duration">${ timeFormatter(dateTo) }</span>
       </p>
       <p class="trip-point__price"> ${ currency } ${ price }</p>
       <ul class="trip-point__offers">
-        
-        <li>
-          <button class="trip-point__offer">Order UBER +&euro;&nbsp;20</button>
-        </li>
-        <li>
-          <button class="trip-point__offer">Upgrade to business +&euro;&nbsp;20</button>
-        </li>
+        ${ tripOffers(offers) }
       </ul>
     </article>
 `;
