@@ -14,4 +14,7 @@ firstTrip.onClick = () => {
   firstTripEdit.submit = () => {
     firstTripEdit.unrender(tripsContainer);
   };
+  firstTripEdit.reset = () => {
+    firstTripEdit.unrender(tripsContainer);
+  };
 };

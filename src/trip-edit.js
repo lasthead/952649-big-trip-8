@@ -140,7 +140,7 @@ export default class Trip {
           <input type="hidden" class="point__total-price" name="total-price" value="">
         </section>
       </form>
-    </article>`;
+    </article>`.trim();
   }
 
   render(container) {
@@ -148,15 +148,14 @@ export default class Trip {
       container.removeChild(this._element);
       this._element = null;
     }
-
     this._element = createElement(this.template);
     container.appendChild(this._element);
-
     this.bind();
-
   }
   unrender(container) {
+    event.preventDefault();
     container.removeChild(this._element);
+    this._element = null;
   }
   onClick(fn) {
     this._onClick = fn;
