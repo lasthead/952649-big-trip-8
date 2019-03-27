@@ -17,6 +17,10 @@ export default class Trip {
     this._state = {
       isEdit: false
     };
+    this._onClick = null;
+  }
+  _onEditButtonClick() {
+    return typeof this._onClick === `function` && this._onClick();
   }
   get template() {
     return `<article class="trip-point">
@@ -30,8 +34,10 @@ export default class Trip {
           <ul class="trip-point__offers">
             ${ tripOffers(this._offers) }
           </ul>
-        </article>`;
+        </article>
+`;
   }
+
   render(container) {
     if (this._element) {
       container.removeChild(this._element);
@@ -40,5 +46,20 @@ export default class Trip {
 
     this._element = createElement(this.template);
     container.appendChild(this._element);
+
+    this.bind();
+    this.update();
+  }
+  set onClick(fn) {
+    this._onClick = fn;
+  }
+  bind() {
+    this._element.addEventListener(`click`, this._onEditButtonClick.bind(this));
+  }
+  update() {
+    if (this._state.isEdit) {
+      return this._element.classList.add(`card--edit`);
+    }
+    this._element.classList.remove(`card--edit`);
   }
 }
