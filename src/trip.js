@@ -48,18 +48,11 @@ export default class Trip {
     container.appendChild(this._element);
 
     this.bind();
-    this.update();
   }
   set onClick(fn) {
     this._onClick = fn;
   }
   bind() {
     this._element.addEventListener(`click`, this._onEditButtonClick.bind(this));
-  }
-  update() {
-    if (this._state.isEdit) {
-      return this._element.classList.add(`card--edit`);
-    }
-    this._element.classList.remove(`card--edit`);
   }
 }

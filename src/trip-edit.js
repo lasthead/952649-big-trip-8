@@ -1,22 +1,8 @@
-
-import {timeFormatter} from './store/const';
-import tripOffers from './components/tripComponents/tripOffers';
 import createElement from './components/tripComponents/createElement';
 
 export default class Trip {
   constructor(data = null) {
-    // this._title = data.title;
-    // this._type = data.type;
-    // this._destinations = data.destinations;
-    // this._dateFrom = data.dateFrom;
-    // this._dateTo = data.dateTo;
-    // this._currency = data.currency;
-    // this._price = data.price;
-    // this._offers = data.offers;
     this._element = null;
-    this._state = {
-      isEdit: false
-    };
     this._onSubmit = null;
     this._onReset = null;
   }
