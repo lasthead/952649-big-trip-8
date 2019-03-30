@@ -1,7 +1,8 @@
-import createElement from './components/tripComponents/createElement';
+import Component from './component';
 
-export default class Trip {
-  constructor(data = null) {
+export default class Trip extends Component {
+  constructor() {
+    super();
     this._element = null;
     this._onSubmit = null;
     this._onReset = null;
@@ -128,21 +129,6 @@ export default class Trip {
       </form>
     </article>`.trim();
   }
-
-  render(container) {
-    if (this._element) {
-      container.removeChild(this._element);
-      this._element = null;
-    }
-    this._element = createElement(this.template);
-    container.appendChild(this._element);
-    this.bind();
-  }
-  unrender(container) {
-    event.preventDefault();
-    container.removeChild(this._element);
-    this._element = null;
-  }
   onClick(fn) {
     this._onClick = fn;
   }
@@ -151,12 +137,5 @@ export default class Trip {
       .addEventListener(`click`, this._onSaveTripForm.bind(this));
     this._element.querySelector(`button[type="reset"]`)
       .addEventListener(`click`, this._onResetTripForm.bind(this));
-  }
-
-  set submit(fn) {
-    this._onSubmit = fn;
-  }
-  set reset(fn) {
-    this._onReset = fn;
   }
 }

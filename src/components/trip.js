@@ -1,10 +1,11 @@
 
-import {timeFormatter} from './store/const';
-import tripOffers from './components/tripComponents/tripOffers';
-import createElement from './components/tripComponents/createElement';
+import {timeFormatter} from '../store/const';
+import tripOffers from './tripComponents/tripOffers';
+import Component from './component';
 
-export default class Trip {
+export default class Trip extends Component {
   constructor(data) {
+    super();
     this._title = data.title;
     this._type = data.type;
     this._destinations = data.destinations;
@@ -13,10 +14,6 @@ export default class Trip {
     this._currency = data.currency;
     this._price = data.price;
     this._offers = data.offers;
-    this._element = null;
-    this._state = {
-      isEdit: false
-    };
     this._onClick = null;
   }
   _onEditButtonClick() {
@@ -36,18 +33,6 @@ export default class Trip {
           </ul>
         </article>
 `;
-  }
-
-  render(container) {
-    if (this._element) {
-      container.removeChild(this._element);
-      this._element = null;
-    }
-
-    this._element = createElement(this.template);
-    container.appendChild(this._element);
-
-    this.bind();
   }
   set onClick(fn) {
     this._onClick = fn;
