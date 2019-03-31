@@ -1,8 +1,8 @@
 
 import {boardTrips} from "./store/const";
 import tripData from "./store/tripsData";
-import Trip from "./trip";
-import TripEdit from "./trip-edit";
+import Trip from "./components/trip";
+import TripEdit from "./components/trip-edit";
 
 const tripsContainer = boardTrips;
 const firstTrip = new Trip(tripData());
