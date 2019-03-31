@@ -27,6 +27,7 @@ export default class Component {
   }
   bind() {}
   unbind() {}
+  update() {}
   set submit(fn) {
     this._onSubmit = fn;
   }
