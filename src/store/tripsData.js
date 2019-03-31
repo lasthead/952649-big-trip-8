@@ -11,7 +11,7 @@ export default () => ({
     {name: `Check-in`, icon: `🏨`},
     {name: `Sightseeing`, icon: `🏛️`},
     {name: `Restaurant`, icon: `🍴`},
-  ][Math.floor(Math.random() * 10)],
+  ],
   destinations:
     [
       `Amsterdam`,
@@ -24,7 +24,7 @@ export default () => ({
       `Bali`,
       `Berlin`,
       `Vancouver`
-    ][Math.floor(Math.random() * 10)],
+    ],
   picture: `http://picsum.photos/300/150?r=${Math.random()}`,
   currency: `€`,
   offers: [
@@ -59,7 +59,7 @@ export default () => ({
       currency: `€`,
     },
   ].sort(),
-  about: new Set([
+  about: [
     `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
     `Cras aliquet varius magna, non porta ligula feugiat eget.`,
     `Fusce tristique felis at fermentum pharetra.`,
@@ -70,7 +70,7 @@ export default () => ({
     `Sed sed nisi sed augue convallis suscipit in sed felis.`,
     `Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus.`,
     `In rutrum ac purus sit amet tempus`
-  ]),
+  ][Math.floor(Math.random() * 4)],
   dateFrom: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 60 * 60 * 1000,
   dateTo: Date.now() + 1 + Math.floor(Math.random() * 8) * 24 * 60 * 60 * 1000,
   price: [

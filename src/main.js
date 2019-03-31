@@ -6,7 +6,7 @@ import TripEdit from "./components/trip-edit";
 
 const tripsContainer = boardTrips;
 const firstTrip = new Trip(tripData());
-const firstTripEdit = new TripEdit();
+const firstTripEdit = new TripEdit(tripData());
 
 firstTrip.render(tripsContainer);
 firstTrip.onClick = () => {

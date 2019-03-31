@@ -7,8 +7,8 @@ export default class Trip extends Component {
   constructor(data) {
     super();
     this._title = data.title;
-    this._type = data.type;
-    this._destinations = data.destinations;
+    this._type = data.type[Math.floor(Math.random() * 10)];
+    this._destinations = data.destinations[Math.floor(Math.random() * 10)];
     this._dateFrom = data.dateFrom;
     this._dateTo = data.dateTo;
     this._currency = data.currency;
@@ -39,5 +39,11 @@ export default class Trip extends Component {
   }
   bind() {
     this._element.addEventListener(`click`, this._onEditButtonClick.bind(this));
+  }
+  update(data) {
+    this._title = data.title;
+    this._tags = data.tags;
+    this._color = data.color;
+    this._repeatingDays = data.repeatingDays;
   }
 }
