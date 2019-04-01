@@ -17,3 +17,11 @@ export const timeFormatter = (timestamp) => {
 export const getRandomNumberRange = (min, max) => {
   return Math.random() * (max - min) + min;
 };
+
+export const getRandomPhotosArray = (count) => {
+  let result = [];
+  for (let i = 0; i < count; i++) {
+    result.push(`http://picsum.photos/300/150?r=${Math.random()}`);
+  }
+  return result;
+};

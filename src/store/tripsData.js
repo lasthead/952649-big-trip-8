@@ -1,3 +1,4 @@
+import {getRandomPhotosArray} from './const';
 export default () => ({
   title: `Taxi to Airport`,
   type: [
@@ -25,7 +26,7 @@ export default () => ({
       `Berlin`,
       `Vancouver`
     ],
-  picture: `http://picsum.photos/300/150?r=${Math.random()}`,
+  pictures: getRandomPhotosArray(3),
   currency: `€`,
   offers: [
     {

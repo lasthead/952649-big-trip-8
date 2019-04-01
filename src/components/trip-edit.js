@@ -12,6 +12,7 @@ export default class Trip extends Component {
     this._price = data.price;
     this._offers = data.offers;
     this._about = data.about;
+    this._pictures = data.pictures;
     this._element = null;
     this._onSubmit = null;
     this._onReset = null;
@@ -22,6 +23,13 @@ export default class Trip extends Component {
   }
   _onResetTripForm() {
     return typeof this._onSubmit === `function` && this._onReset();
+  }
+  _partialUpdate() {
+    this._element.innerHTML = this.template;
+  }
+  _onSubmitButtonClick(evt) {
+    evt.preventDefault();
+    typeof this._onSubmit === `function` && this._onSubmit();
   }
   get template() {
     return `<article class="point">
@@ -34,9 +42,7 @@ export default class Trip extends Component {
     
           <div class="travel-way">
             <label class="travel-way__label" for="travel-way__toggle">✈️</label>
-    
             <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
-    
             <div class="travel-way__select">
               <div class="travel-way__select-group">
                 ${ [...this._type].map((it) =>
@@ -82,8 +88,8 @@ export default class Trip extends Component {
     
             <div class="point__offers-wrap">
               ${ [...this._offers].map((offer) => `
-              <input class="point__offers-input visually-hidden" type="checkbox" id="add-luggage" name="offer" value="add-luggage">
-              <label for="add-luggage" class="point__offers-label">
+              <input class="point__offers-input visually-hidden" type="checkbox" id="${offer.name.trim()}" name="offer" value="add-luggage">
+              <label for="${offer.name.trim()}" class="point__offers-label">
                 <span class="point__offer-service">${offer.name}</span> ${offer.currency}<span class="point__offer-price">${offer.price}</span>
               </label>
               `).join(``) }
@@ -94,11 +100,9 @@ export default class Trip extends Component {
             <h3 class="point__details-title">Destination</h3>
             <p class="point__destination-text">${this._about}</p>
             <div class="point__destination-images">
-              <img src="http://picsum.photos/330/140?r=123" alt="picture from place" class="point__destination-image">
-              <img src="http://picsum.photos/300/200?r=1234" alt="picture from place" class="point__destination-image">
-              <img src="http://picsum.photos/300/100?r=12345" alt="picture from place" class="point__destination-image">
-              <img src="http://picsum.photos/200/300?r=123456" alt="picture from place" class="point__destination-image">
-              <img src="http://picsum.photos/100/300?r=1234567" alt="picture from place" class="point__destination-image">
+            ${ [...this._pictures].map((picture) => `
+              <img src="${ picture }" alt="picture from place" class="point__destination-image">
+            `).join(``) }
             </div>
           </section>
           <input type="hidden" class="point__total-price" name="total-price" value="">
