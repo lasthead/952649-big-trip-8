@@ -1,7 +1,9 @@
-import {getRandomPhotosArray} from './const';
+import {getRandomNumberRange, getRandomPhotosArray} from './const';
+import {travelWay, about, destinations, offers, price} from './mockData';
+
 export default () => ({
   title: `Taxi to Airport`,
-  type: [
+  travelWay: [
     {name: `Taxi`, icon: `🚕`},
     {name: `Bus`, icon: `🚌`},
     {name: `Train`, icon: `🚂`},
@@ -13,7 +15,7 @@ export default () => ({
     {name: `Sightseeing`, icon: `🏛️`},
     {name: `Restaurant`, icon: `🍴`},
   ],
-  destinations:
+  destination:
     [
       `Amsterdam`,
       `Geneva`,
@@ -28,38 +30,7 @@ export default () => ({
     ],
   pictures: getRandomPhotosArray(3),
   currency: `€`,
-  offers: [
-    {
-      name: `Add luggage`,
-      price: 20,
-      currency: `€`,
-    },
-    {
-      name: `Switch to comfort class`,
-      price: 20,
-      currency: `€`,
-    },
-    {
-      name: `Add meal`,
-      price: 20,
-      currency: `€`,
-    },
-    {
-      name: `Choose seats`,
-      price: 20,
-      currency: `€`,
-    },
-    {
-      name: `Сhoose a flight attendant`,
-      price: 40,
-      currency: `€`,
-    },
-    {
-      name: `Сhoose place near the driver`,
-      price: 50,
-      currency: `€`,
-    },
-  ].sort(),
+  offers: offers.slice(0, getRandomNumberRange(1, 3)),
   about: [
     `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
     `Cras aliquet varius magna, non porta ligula feugiat eget.`,
