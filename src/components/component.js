@@ -8,25 +8,25 @@ export default class Component {
     this._element = null;
     this._state = null;
   }
+  get element() {
+    return this._element;
+  }
   get template() {
     throw new Error(`You have to define template.`);
   }
-  render(container) {
-    if (this._element) {
-      container.removeChild(this._element);
-      this._element = null;
-    }
+  render() {
     this._element = createElement(this.template);
-    container.appendChild(this._element);
     this.bind();
+    return this._element;
   }
-  unrender(container) {
-    event.preventDefault();
-    container.removeChild(this._element);
+  unrender() {
+    this.unbind();
+    this._element.remove();
     this._element = null;
   }
   bind() {}
   unbind() {}
+  update() {}
   set submit(fn) {
     this._onSubmit = fn;
   }

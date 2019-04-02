@@ -4,17 +4,29 @@ import tripData from "./store/tripsData";
 import Trip from "./components/trip";
 import TripEdit from "./components/trip-edit";
 
+const trip = tripData();
 const tripsContainer = boardTrips;
-const firstTrip = new Trip(tripData());
-const firstTripEdit = new TripEdit();
+const firstTrip = new Trip(trip);
+const firstTripEdit = new TripEdit(trip);
 
-firstTrip.render(tripsContainer);
+tripsContainer.appendChild(firstTrip.render());
 firstTrip.onClick = () => {
-  firstTripEdit.render(tripsContainer);
-  firstTripEdit.submit = () => {
-    firstTripEdit.unrender(tripsContainer);
-  };
-  firstTripEdit.reset = () => {
-    firstTripEdit.unrender(tripsContainer);
-  };
+  firstTripEdit.render();
+  tripsContainer.replaceChild(firstTripEdit.element, firstTrip.element);
+  firstTrip.unrender();
+};
+firstTripEdit.onSubmit = (newObject) => {
+  trip.travelWay = newObject.travelWay;
+  trip.destination = newObject.destination;
+  trip.price = newObject.price;
+  trip.offers = newObject.offers;
+  // trip.title = newObject.title;
+  //console.log(newObject);
+  firstTrip.update(trip);
+  firstTrip.render();
+  tripsContainer.replaceChild(firstTrip.element, firstTripEdit.element);
+  firstTripEdit.unrender();
+};
+firstTripEdit.reset = () => {
+  firstTripEdit.unrender(tripsContainer);
 };

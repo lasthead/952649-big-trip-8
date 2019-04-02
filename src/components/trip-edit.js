@@ -1,22 +1,80 @@
 import Component from './component';
+import flatpickr from "flatpickr";
 
-export default class Trip extends Component {
-  constructor() {
+export default class TripEdit extends Component {
+  constructor(data) {
     super();
+    this._travelWay = data.travelWay;
+    this._destination = data.destination;
+    this._dateFrom = data.dateFrom;
+    this._dateTo = data.dateTo;
+    this._currency = data.currency;
+    this._price = data.price;
+    this._offers = data.offers;
+    this._about = data.about;
+    this._pictures = data.pictures;
     this._element = null;
     this._onSubmit = null;
     this._onReset = null;
   }
-
-  _onSaveTripForm() {
-    return typeof this._onSubmit === `function` && this._onSubmit();
+  _processForm(formData) {
+    const entry = {
+      travelWay: ``,
+      destination: ``,
+      time: ``,
+      price: ``,
+      offers: new Set(),
+      isFavorite: false
+    };
+    const tripEditMapper = TripEdit.createMapper(entry);
+    for (const pair of formData.entries()) {
+      const [property, value] = pair;
+      tripEditMapper[property] && tripEditMapper[property](value);
+    }
+    return entry;
   }
   _onResetTripForm() {
     return typeof this._onSubmit === `function` && this._onReset();
   }
+  _partialUpdate() {
+    this._element.innerHTML = this.template;
+  }
+  _onSaveTripForm(evt) {
+    evt.preventDefault();
+    const formData = new FormData(this._element.querySelector(`.point__form`));
+    const newData = this._processForm(formData);
+    console.log(newData);
+    typeof this._onSubmit === `function` && this._onSubmit(newData);
+    this.update(newData);
+  }
+  _initFlatPickr() {
+    flatpickr(this._element.querySelector(`.date-value`), {
+      'mode': `range`,
+      'enableTime': true,
+      'dateFormat': `H:i`,
+      'defaultDate': [this._dateFrom, this._dateTo],
+      'minDate': `today`,
+      'time_24hr': true,
+      'appendTo': this._element,
+      onChange(selectedDates) {
+        this._dateFrom = selectedDates[0];
+        this._dateTo = selectedDates[1];
+      },
+    });
+  }
+  static createMapper(target) {
+    return {
+      [`travel-way`]: (value) => target.travelWay = value,
+      destination: (value) => target.destination = value,
+      time: (value) => target.time = value,
+      price: (value) => target.price = value,
+      offer: (value) => target.offers.add(value),
+      favorite: (value) => target.isFavorite = value
+    };
+  }
   get template() {
     return `<article class="point">
-      <form action="" method="get">
+      <form class="point__form" action="" method="get">
         <header class="point__header">
           <label class="point__date">
             choose day
@@ -25,30 +83,12 @@ export default class Trip extends Component {
     
           <div class="travel-way">
             <label class="travel-way__label" for="travel-way__toggle">✈️</label>
-    
             <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
-    
             <div class="travel-way__select">
               <div class="travel-way__select-group">
-                <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-taxi" name="travel-way" value="taxi">
-                <label class="travel-way__select-label" for="travel-way-taxi">🚕 taxi</label>
-    
-                <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-bus" name="travel-way" value="bus">
-                <label class="travel-way__select-label" for="travel-way-bus">🚌 bus</label>
-    
-                <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-train" name="travel-way" value="train">
-                <label class="travel-way__select-label" for="travel-way-train">🚂 train</label>
-    
-                <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-flight" name="travel-way" value="train" checked>
-                <label class="travel-way__select-label" for="travel-way-flight">✈️ flight</label>
-              </div>
-    
-              <div class="travel-way__select-group">
-                <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-check-in" name="travel-way" value="check-in">
-                <label class="travel-way__select-label" for="travel-way-check-in">🏨 check-in</label>
-    
-                <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-sightseeing" name="travel-way" value="sight-seeing">
-                <label class="travel-way__select-label" for="travel-way-sightseeing">🏛 sightseeing</label>
+                ${ [...this._travelWay].map((it) =>
+    `<input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${it.name.toLowerCase().trim()}" name="travel-way" value="${it.name.toLowerCase().trim()}">
+                <label class="travel-way__select-label" for="travel-way-${it.name.toLowerCase().trim()}">${it.icon} ${it.name}</label>`).join(``) }
               </div>
             </div>
           </div>
@@ -57,22 +97,19 @@ export default class Trip extends Component {
             <label class="point__destination-label" for="destination">Flight to</label>
             <input class="point__destination-input" list="destination-select" id="destination" value="Chamonix" name="destination">
             <datalist id="destination-select">
-              <option value="airport"></option>
-              <option value="Geneva"></option>
-              <option value="Chamonix"></option>
-              <option value="hotel"></option>
+              ${ [...this._destination].map((it) => `<option value="${it}"></option>`).join(``)}
             </datalist>
           </div>
     
           <label class="point__time">
             choose time
-            <input class="point__input" type="text" value="00:00 — 00:00" name="time" placeholder="00:00 — 00:00">
+            <input class="point__input date-value" type="text" value="" name="time" placeholder="00:00 — 00:00">
           </label>
     
           <label class="point__price">
             write price
             <span class="point__price-currency">€</span>
-            <input class="point__input" type="text" value="160" name="price">
+            <input class="point__input" type="text" value="${this._price}" name="price">
           </label>
     
           <div class="point__buttons">
@@ -91,37 +128,22 @@ export default class Trip extends Component {
             <h3 class="point__details-title">offers</h3>
     
             <div class="point__offers-wrap">
-              <input class="point__offers-input visually-hidden" type="checkbox" id="add-luggage" name="offer" value="add-luggage">
-              <label for="add-luggage" class="point__offers-label">
-                <span class="point__offer-service">Add luggage</span> + €<span class="point__offer-price">30</span>
+              ${ [...this._offers].map((offer) => `
+              <input class="point__offers-input visually-hidden" type="checkbox" id="${offer.name.toLowerCase().trim()}" name="offer" value="${offer.name}">
+              <label for="${offer.name.toLowerCase().trim()}" class="point__offers-label">
+                <span class="point__offer-service">${offer.name}</span> ${offer.currency}<span class="point__offer-price">${offer.price}</span>
               </label>
-    
-              <input class="point__offers-input visually-hidden" type="checkbox" id="switch-to-comfort-class" name="offer" value="switch-to-comfort-class">
-              <label for="switch-to-comfort-class" class="point__offers-label">
-                <span class="point__offer-service">Switch to comfort class</span> + €<span class="point__offer-price">100</span>
-              </label>
-    
-              <input class="point__offers-input visually-hidden" type="checkbox" id="add-meal" name="offer" value="add-meal">
-              <label for="add-meal" class="point__offers-label">
-                <span class="point__offer-service">Add meal </span> + €<span class="point__offer-price">15</span>
-              </label>
-    
-              <input class="point__offers-input visually-hidden" type="checkbox" id="choose-seats" name="offer" value="choose-seats">
-              <label for="choose-seats" class="point__offers-label">
-                <span class="point__offer-service">Choose seats</span> + €<span class="point__offer-price">5</span>
-              </label>
+              `).join(``) }
             </div>
     
           </section>
           <section class="point__destination">
             <h3 class="point__details-title">Destination</h3>
-            <p class="point__destination-text">Geneva is a city in Switzerland that lies at the southern tip of expansive Lac Léman (Lake Geneva). Surrounded by the Alps and Jura mountains, the city has views of dramatic Mont Blanc.</p>
+            <p class="point__destination-text">${this._about}</p>
             <div class="point__destination-images">
-              <img src="http://picsum.photos/330/140?r=123" alt="picture from place" class="point__destination-image">
-              <img src="http://picsum.photos/300/200?r=1234" alt="picture from place" class="point__destination-image">
-              <img src="http://picsum.photos/300/100?r=12345" alt="picture from place" class="point__destination-image">
-              <img src="http://picsum.photos/200/300?r=123456" alt="picture from place" class="point__destination-image">
-              <img src="http://picsum.photos/100/300?r=1234567" alt="picture from place" class="point__destination-image">
+            ${ [...this._pictures].map((picture) => `
+              <img src="${ picture }" alt="picture from place" class="point__destination-image">
+            `).join(``) }
             </div>
           </section>
           <input type="hidden" class="point__total-price" name="total-price" value="">
@@ -137,5 +159,18 @@ export default class Trip extends Component {
       .addEventListener(`click`, this._onSaveTripForm.bind(this));
     this._element.querySelector(`button[type="reset"]`)
       .addEventListener(`click`, this._onResetTripForm.bind(this));
+    this._initFlatPickr();
+    //console.log(this);
+  }
+  _onChangeDate() {}
+  _onChangeRepeated() {}
+  set onSubmit(fn) {
+    this._onSubmit = fn;
+  }
+  update(data) {
+    this._travelWay = data.travelWay;
+    this._destination = data.destination;
+    this._price = data.price;
+    this._offers = data.offers;
   }
 }
