@@ -3,18 +3,7 @@ import {travelWay, about, destinations, offers, price} from './mockData';
 
 export default () => ({
   title: `Taxi to Airport`,
-  travelWay: [
-    {name: `Taxi`, icon: `🚕`},
-    {name: `Bus`, icon: `🚌`},
-    {name: `Train`, icon: `🚂`},
-    {name: `Ship`, icon: `🛳`},
-    {name: `Transport`, icon: `🚊`},
-    {name: `Drive`, icon: `🚗`},
-    {name: `Flight`, icon: `✈️`},
-    {name: `Check-in`, icon: `🏨`},
-    {name: `Sightseeing`, icon: `🏛️`},
-    {name: `Restaurant`, icon: `🍴`},
-  ],
+  travelWay: travelWay,
   destination:
     [
       `Amsterdam`,

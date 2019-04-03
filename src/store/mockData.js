@@ -1,14 +1,14 @@
 export const travelWay = [
-  {name: `Taxi`, icon: `🚕`},
-  {name: `Bus`, icon: `🚌`},
-  {name: `Train`, icon: `🚂`},
-  {name: `Ship`, icon: `🛳`},
-  {name: `Transport`, icon: `🚊`},
-  {name: `Drive`, icon: `🚗`},
-  {name: `Flight`, icon: `✈️`},
-  {name: `Check-in`, icon: `🏨`},
-  {name: `Sightseeing`, icon: `🏛️`},
-  {name: `Restaurant`, icon: `🍴`},
+  {id: 0, name: `Taxi`, icon: `🚕`},
+  {id: 1, name: `Bus`, icon: `🚌`},
+  {id: 2, name: `Train`, icon: `🚂`},
+  {id: 3, name: `Ship`, icon: `🛳`},
+  {id: 4, name: `Transport`, icon: `🚊`},
+  {id: 5, name: `Drive`, icon: `🚗`},
+  {id: 6, name: `Flight`, icon: `✈️`},
+  {id: 7, name: `Check-in`, icon: `🏨`},
+  {id: 8, name: `Sightseeing`, icon: `🏛️`},
+  {id: 9, name: `Restaurant`, icon: `🍴`},
 ];
 
 export const destinations = [

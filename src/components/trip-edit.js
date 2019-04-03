@@ -23,15 +23,20 @@ export default class TripEdit extends Component {
       destination: ``,
       time: ``,
       price: ``,
-      offers: new Set(),
+      offers: [],
       isFavorite: false
     };
-    const tripEditMapper = TripEdit.createMapper(entry);
+    const tripEditMapper = this.createMapper(entry);
     for (const pair of formData.entries()) {
       const [property, value] = pair;
       tripEditMapper[property] && tripEditMapper[property](value);
     }
     return entry;
+  }
+
+  _filterObject(itemId, object) {
+    let foundOffer = object.filter(item => item.id === Number(itemId))[0];
+    return foundOffer;
   }
   _onResetTripForm() {
     return typeof this._onSubmit === `function` && this._onReset();
@@ -43,7 +48,6 @@ export default class TripEdit extends Component {
     evt.preventDefault();
     const formData = new FormData(this._element.querySelector(`.point__form`));
     const newData = this._processForm(formData);
-    console.log(newData);
     typeof this._onSubmit === `function` && this._onSubmit(newData);
     this.update(newData);
   }
@@ -62,13 +66,13 @@ export default class TripEdit extends Component {
       },
     });
   }
-  static createMapper(target) {
+  createMapper(target) {
     return {
-      [`travel-way`]: (value) => target.travelWay = value,
+      [`travel-way`]: (value) => target.travelWay = this._filterObject(value, this._travelWay),
       destination: (value) => target.destination = value,
       time: (value) => target.time = value,
       price: (value) => target.price = value,
-      offer: (value) => target.offers.add(value),
+      offer: (value) => target.offers.push(this._filterObject(value, this._offers)),
       favorite: (value) => target.isFavorite = value
     };
   }
@@ -87,7 +91,7 @@ export default class TripEdit extends Component {
             <div class="travel-way__select">
               <div class="travel-way__select-group">
                 ${ [...this._travelWay].map((it) =>
-    `<input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${it.name.toLowerCase().trim()}" name="travel-way" value="${it.name.toLowerCase().trim()}">
+    `<input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${it.name.toLowerCase().trim()}" name="travel-way" value="${it.id}">
                 <label class="travel-way__select-label" for="travel-way-${it.name.toLowerCase().trim()}">${it.icon} ${it.name}</label>`).join(``) }
               </div>
             </div>
@@ -129,7 +133,7 @@ export default class TripEdit extends Component {
     
             <div class="point__offers-wrap">
               ${ [...this._offers].map((offer) => `
-              <input class="point__offers-input visually-hidden" type="checkbox" id="${offer.name.toLowerCase().trim()}" name="offer" value="${offer.name}">
+              <input class="point__offers-input visually-hidden" type="checkbox" id="${offer.name.toLowerCase().trim()}" name="offer" value="${offer.id}">
               <label for="${offer.name.toLowerCase().trim()}" class="point__offers-label">
                 <span class="point__offer-service">${offer.name}</span> ${offer.currency}<span class="point__offer-price">${offer.price}</span>
               </label>
