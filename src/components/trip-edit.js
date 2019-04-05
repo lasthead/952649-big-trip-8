@@ -49,7 +49,7 @@ export default class TripEdit extends Component {
     const formData = new FormData(this._element.querySelector(`.point__form`));
     const newData = this._processForm(formData);
     typeof this._onSubmit === `function` && this._onSubmit(newData);
-    this.update(newData);
+    //this.update(newData);
   }
   _initFlatPickr() {
     flatpickr(this._element.querySelector(`.date-value`), {
@@ -87,7 +87,7 @@ export default class TripEdit extends Component {
     
           <div class="travel-way">
             <label class="travel-way__label" for="travel-way__toggle">✈️</label>
-            <input type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
+            <input value="6" type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
             <div class="travel-way__select">
               <div class="travel-way__select-group">
                 ${ [...this._travelWay].map((it) =>

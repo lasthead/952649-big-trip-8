@@ -19,6 +19,7 @@ export default () => ({
     ],
   pictures: getRandomPhotosArray(3),
   currency: `€`,
+  availableOffers: offers,
   offers: offers.slice(0, getRandomNumberRange(1, 3)),
   about: [
     `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
