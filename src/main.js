@@ -20,8 +20,6 @@ firstTripEdit.onSubmit = (newObject) => {
   trip.destination = newObject.destination;
   trip.price = newObject.price;
   trip.offers = newObject.offers;
-  // trip.title = newObject.title;
-  //console.log(newObject);
   firstTrip.update(trip);
   firstTrip.render();
   tripsContainer.replaceChild(firstTrip.element, firstTripEdit.element);

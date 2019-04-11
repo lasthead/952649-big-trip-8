@@ -1,27 +1,56 @@
 export const travelWay = [
-  {id: 0, name: `Taxi`, icon: `🚕`},
-  {id: 1, name: `Bus`, icon: `🚌`},
-  {id: 2, name: `Train`, icon: `🚂`},
-  {id: 3, name: `Ship`, icon: `🛳`},
-  {id: 4, name: `Transport`, icon: `🚊`},
-  {id: 5, name: `Drive`, icon: `🚗`},
-  {id: 6, name: `Flight`, icon: `✈️`},
-  {id: 7, name: `Check-in`, icon: `🏨`},
-  {id: 8, name: `Sightseeing`, icon: `🏛️`},
-  {id: 9, name: `Restaurant`, icon: `🍴`},
+  {id: 0, name: `Taxi`, icon: `🚕`, isChecked: false},
+  {id: 1, name: `Bus`, icon: `🚌`, isChecked: false},
+  {id: 2, name: `Train`, icon: `🚂`, isChecked: true},
+  {id: 3, name: `Ship`, icon: `🛳`, isChecked: false},
+  {id: 4, name: `Transport`, icon: `🚊`, isChecked: false},
+  {id: 5, name: `Drive`, icon: `🚗`, isChecked: false},
+  {id: 6, name: `Flight`, icon: `✈️`, isChecked: false},
+  {id: 7, name: `Check-in`, icon: `🏨`, isChecked: false},
+  {id: 8, name: `Sightseeing`, icon: `🏛️`, isChecked: false},
+  {id: 9, name: `Restaurant`, icon: `🍴`, isChecked: false},
 ];
-
 export const destinations = [
-  `Amsterdam`,
-  `Geneva`,
-  `Chamonix`,
-  `Athens`,
-  `Atlanta`,
-  `Airport`,
-  `Barcelona`,
-  `Bali`,
-  `Berlin`,
-  `Vancouver`
+  {
+    id: 0,
+    name: `Amsterdam`,
+    isChecked: true,
+  },
+  {
+    id: 1,
+    name: `Geneva`,
+    isChecked: false,
+  },
+  {
+    id: 2,
+    name: `Chamonix`,
+    isChecked: false,
+  },
+  {
+    id: 3,
+    name: `Athens`,
+    isChecked: false,
+  },
+  {
+    id: 4,
+    name: `Atlanta`,
+    isChecked: false,
+  },
+  {
+    id: 5,
+    name: `Airport`,
+    isChecked: false,
+  },
+  {
+    id: 6,
+    name: `Barcelona`,
+    isChecked: false,
+  },
+  {
+    id: 7,
+    name: `Bali`,
+    isChecked: false,
+  },
 ];
 
 export const offers = [
@@ -30,36 +59,42 @@ export const offers = [
     name: `Add luggage`,
     price: 20,
     currency: `€`,
+    isChecked: true
   },
   {
     id: 1,
     name: `Switch to comfort class`,
     price: 20,
     currency: `€`,
+    isChecked: true
   },
   {
     id: 2,
     name: `Add meal`,
     price: 20,
     currency: `€`,
+    isChecked: true
   },
   {
     id: 3,
     name: `Choose seats`,
     price: 20,
     currency: `€`,
+    isChecked: false
   },
   {
     id: 4,
     name: `Сhoose a flight attendant`,
     price: 40,
     currency: `€`,
+    isChecked: false
   },
   {
     id: 5,
     name: `Сhoose place near the driver`,
     price: 50,
     currency: `€`,
+    isChecked: false
   },
 ];
 export const about = [

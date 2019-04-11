@@ -5,6 +5,7 @@ export default class TripEdit extends Component {
   constructor(data) {
     super();
     this._travelWay = data.travelWay;
+    this._travelWayChecked = data.travelWay.filter((it)=> it.isChecked === true)[0];
     this._destination = data.destination;
     this._dateFrom = data.dateFrom;
     this._dateTo = data.dateTo;
@@ -19,7 +20,7 @@ export default class TripEdit extends Component {
   }
   _processForm(formData) {
     const entry = {
-      travelWay: ``,
+      travelWay: {},
       destination: ``,
       time: ``,
       price: ``,
@@ -49,7 +50,6 @@ export default class TripEdit extends Component {
     const formData = new FormData(this._element.querySelector(`.point__form`));
     const newData = this._processForm(formData);
     typeof this._onSubmit === `function` && this._onSubmit(newData);
-    //this.update(newData);
   }
   _initFlatPickr() {
     flatpickr(this._element.querySelector(`.date-value`), {
@@ -86,12 +86,12 @@ export default class TripEdit extends Component {
           </label>
     
           <div class="travel-way">
-            <label class="travel-way__label" for="travel-way__toggle">✈️</label>
-            <input value="6" type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
+            <label class="travel-way__label" for="travel-way__toggle">${this._travelWayChecked.icon}️</label>
+            <input value="${this._travelWayChecked.name}" type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
             <div class="travel-way__select">
               <div class="travel-way__select-group">
                 ${ [...this._travelWay].map((it) =>
-    `<input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${it.name.toLowerCase().trim()}" name="travel-way" value="${it.id}">
+    `<input class="travel-way__select-input visually-hidden" type="radio" ${it.isChecked ? `checked` : ``} id="travel-way-${it.name.toLowerCase().trim()}" name="travel-way" value="${it.id}">
                 <label class="travel-way__select-label" for="travel-way-${it.name.toLowerCase().trim()}">${it.icon} ${it.name}</label>`).join(``) }
               </div>
             </div>
@@ -99,7 +99,7 @@ export default class TripEdit extends Component {
     
           <div class="point__destination-wrap">
             <label class="point__destination-label" for="destination">Flight to</label>
-            <input class="point__destination-input" list="destination-select" id="destination" value="Chamonix" name="destination">
+            <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination[0]}" name="destination">
             <datalist id="destination-select">
               ${ [...this._destination].map((it) => `<option value="${it}"></option>`).join(``)}
             </datalist>
@@ -133,7 +133,7 @@ export default class TripEdit extends Component {
     
             <div class="point__offers-wrap">
               ${ [...this._offers].map((offer) => `
-              <input class="point__offers-input visually-hidden" type="checkbox" id="${offer.name.toLowerCase().trim()}" name="offer" value="${offer.id}">
+              <input ${offer.isChecked ? `checked` : ``} class="point__offers-input visually-hidden" type="checkbox" id="${offer.name.toLowerCase().trim()}" name="offer" value="${offer.id}">
               <label for="${offer.name.toLowerCase().trim()}" class="point__offers-label">
                 <span class="point__offer-service">${offer.name}</span> ${offer.currency}<span class="point__offer-price">${offer.price}</span>
               </label>
@@ -170,11 +170,5 @@ export default class TripEdit extends Component {
   _onChangeRepeated() {}
   set onSubmit(fn) {
     this._onSubmit = fn;
-  }
-  update(data) {
-    this._travelWay = data.travelWay;
-    this._destination = data.destination;
-    this._price = data.price;
-    this._offers = data.offers;
   }
 }

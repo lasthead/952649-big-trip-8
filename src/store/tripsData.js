@@ -4,23 +4,21 @@ import {travelWay, about, destinations, offers, price} from './mockData';
 export default () => ({
   title: `Taxi to Airport`,
   travelWay: travelWay,
-  destination:
-    [
-      `Amsterdam`,
-      `Geneva`,
-      `Chamonix`,
-      `Athens`,
-      `Atlanta`,
-      `Airport`,
-      `Barcelona`,
-      `Bali`,
-      `Berlin`,
-      `Vancouver`
-    ],
+  destination: [
+    `Amsterdam`,
+    `Geneva`,
+    `Chamonix`,
+    `Athens`,
+    `Atlanta`,
+    `Airport`,
+    `Barcelona`,
+    `Bali`,
+    `Berlin`,
+    `Vancouver`
+  ],
   pictures: getRandomPhotosArray(3),
   currency: `€`,
-  availableOffers: offers,
-  offers: offers.slice(0, getRandomNumberRange(1, 3)),
+  offers: offers,
   about: [
     `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
     `Cras aliquet varius magna, non porta ligula feugiat eget.`,
