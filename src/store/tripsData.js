@@ -3,34 +3,22 @@ import {travelWay, about, destinations, offers, price} from './mockData';
 
 export default () => ({
   title: `Taxi to Airport`,
-  travelWay: [
-    {name: `Taxi`, icon: `🚕`},
-    {name: `Bus`, icon: `🚌`},
-    {name: `Train`, icon: `🚂`},
-    {name: `Ship`, icon: `🛳`},
-    {name: `Transport`, icon: `🚊`},
-    {name: `Drive`, icon: `🚗`},
-    {name: `Flight`, icon: `✈️`},
-    {name: `Check-in`, icon: `🏨`},
-    {name: `Sightseeing`, icon: `🏛️`},
-    {name: `Restaurant`, icon: `🍴`},
+  travelWay: travelWay,
+  destination: [
+    `Amsterdam`,
+    `Geneva`,
+    `Chamonix`,
+    `Athens`,
+    `Atlanta`,
+    `Airport`,
+    `Barcelona`,
+    `Bali`,
+    `Berlin`,
+    `Vancouver`
   ],
-  destination:
-    [
-      `Amsterdam`,
-      `Geneva`,
-      `Chamonix`,
-      `Athens`,
-      `Atlanta`,
-      `Airport`,
-      `Barcelona`,
-      `Bali`,
-      `Berlin`,
-      `Vancouver`
-    ],
   pictures: getRandomPhotosArray(3),
   currency: `€`,
-  offers: offers.slice(0, getRandomNumberRange(1, 3)),
+  offers: offers,
   about: [
     `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
     `Cras aliquet varius magna, non porta ligula feugiat eget.`,

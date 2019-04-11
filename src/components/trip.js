@@ -6,7 +6,7 @@ import Component from './component';
 export default class Trip extends Component {
   constructor(data) {
     super();
-    this._travelWay = data.travelWay[Math.floor(Math.random() * 10)];
+    this._travelWay = data.travelWay.filter((it)=> it.isChecked === true)[0];
     this._destination = data.destination[Math.floor(Math.random() * 10)];
     this._dateFrom = data.dateFrom;
     this._dateTo = data.dateTo;
@@ -28,7 +28,7 @@ export default class Trip extends Component {
           </p>
           <p class="trip-point__price"> ${ this._currency } ${ this._price }</p>
           <ul class="trip-point__offers">
-            ${ tripOffers(this._offers) }
+            ${ tripOffers(this._offers.filter((it)=> it.isChecked === true)) }
           </ul>
         </article>
 `;
