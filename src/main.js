@@ -1,32 +1,68 @@
 
-import {boardTrips} from "./store/const";
-import tripData from "./store/tripsData";
+import {boardTrips, boardMainFilters} from "./store/const";
+import {mockData, filters} from "./store/tripsData";
 import Trip from "./components/trip";
 import TripEdit from "./components/trip-edit";
+import Filter from "./components/filter";
 
-const trip = tripData();
 const tripsContainer = boardTrips;
-const firstTrip = new Trip(trip);
-const firstTripEdit = new TripEdit(trip);
+const tripsArray = mockData();
+const renderTrips = (arrayObjects) => {
+  boardTrips.innerHTML = ``;
+  arrayObjects.forEach((item)=>{
+    tripEventInit(item);
+  });
+};
+const updateTrip = (trip, i, newTrip) => {
 
-tripsContainer.appendChild(firstTrip.render());
-firstTrip.onClick = () => {
-  firstTripEdit.render();
-  tripsContainer.replaceChild(firstTripEdit.element, firstTrip.element);
-  firstTrip.unrender();
+  trip = Object.assign({}, trip, newTrip);
+  return trip;
 };
-firstTripEdit.onSubmit = (newObject) => {
-  trip.travelWay = newObject.travelWay;
-  trip.destination = newObject.destination;
-  trip.price = newObject.price;
-  trip.offers = newObject.offers;
-  // trip.title = newObject.title;
-  //console.log(newObject);
-  firstTrip.update(trip);
-  firstTrip.render();
-  tripsContainer.replaceChild(firstTrip.element, firstTripEdit.element);
-  firstTripEdit.unrender();
+
+const tripEventInit = (trip)=>{
+  const tripPoint = new Trip(trip);
+  const tripPointEdit = new TripEdit(trip);
+  tripsContainer.appendChild(tripPoint.render());
+  tripPoint.onClick = () => {
+    tripPointEdit.render();
+    tripsContainer.replaceChild(tripPointEdit.element, tripPoint.element);
+    tripPoint.unrender();
+  };
+  tripPointEdit.onSubmit = (newObject) => {
+    updateTrip(trip, trip.id, newObject);
+    tripPoint.update(trip);
+    tripPoint.render();
+    tripsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
+    tripPointEdit.unrender();
+  };
+  tripPointEdit.reset = () => {
+    tripPointEdit.unrender(tripsContainer);
+  };
 };
-firstTripEdit.reset = () => {
-  firstTripEdit.unrender(tripsContainer);
+
+const filterSearch = (filterValue, trips) => {
+  const currentDate = new Date().getTime();
+  switch (filterValue) {
+    case `future`:
+      return trips.filter((item) => item.from > currentDate);
+    case `past`:
+      return trips.filter((item) => item.from < currentDate);
+    default:
+      return trips;
+  }
 };
+
+const filtersInit = (filtersData, trips) => {
+  filtersData.forEach((item)=>{
+    const filter = new Filter(item);
+    boardMainFilters.appendChild(filter.render());
+    filter.onFilter = (event) => {
+      const filteredItems = filterSearch(event.target.value, trips);
+      renderTrips(filteredItems);
+    };
+  });
+};
+
+renderTrips(tripsArray);
+
+filtersInit(filters, tripsArray);
