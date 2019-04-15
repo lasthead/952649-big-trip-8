@@ -3,9 +3,12 @@ import {boardTrips, boardMainFilters} from "./store/const";
 import {mockData, filters} from "./store/tripsData";
 import Trip from "./components/trip";
 import TripEdit from "./components/trip-edit";
+import Filter from "./components/filter";
 
 const tripsContainer = boardTrips;
+const tripsArray = mockData();
 const renderTrips = (arrayObjects) => {
+  boardTrips.innerHTML = ``;
   arrayObjects.forEach((item)=>{
     tripEventInit(item);
   });
@@ -26,14 +29,7 @@ const tripEventInit = (trip)=>{
     tripPoint.unrender();
   };
   tripPointEdit.onSubmit = (newObject) => {
-
     updateTrip(trip, trip.id, newObject);
-    // console.log(trip);
-    // console.log(newTrip);
-    // trip.travelWay = newObject.travelWay;
-    // trip.destination = newObject.destination;
-    // trip.price = newObject.price;
-    // trip.offers = newObject.offers;
     tripPoint.update(trip);
     tripPoint.render();
     tripsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
@@ -43,10 +39,30 @@ const tripEventInit = (trip)=>{
     tripPointEdit.unrender(tripsContainer);
   };
 };
-const filtersInit(filtersData) {
-  boardMainFilters;
 
-}
-renderTrips(mockData());
+const filterSearch = (filterValue, trips) => {
+  const currentDate = new Date().getTime();
+  switch (filterValue) {
+    case `future`:
+      return trips.filter((item) => item.from > currentDate);
+    case `past`:
+      return trips.filter((item) => item.from < currentDate);
+    default:
+      return trips;
+  }
+};
 
-filtersInit(filters);
+const filtersInit = (filtersData, trips) => {
+  filtersData.forEach((item)=>{
+    const filter = new Filter(item);
+    boardMainFilters.appendChild(filter.render());
+    filter.onFilter = (event) => {
+      const filteredItems = filterSearch(event.target.value, trips);
+      renderTrips(filteredItems);
+    };
+  });
+};
+
+renderTrips(tripsArray);
+
+filtersInit(filters, tripsArray);
