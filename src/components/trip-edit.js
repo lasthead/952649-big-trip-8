@@ -17,6 +17,7 @@ export default class TripEdit extends Component {
     this._element = null;
     this._onSubmit = null;
     this._onReset = null;
+    this._onDelete = null;
   }
   _processForm(formData) {
     const entry = {
@@ -32,11 +33,17 @@ export default class TripEdit extends Component {
       const [property, value] = pair;
       tripEditMapper[property] && tripEditMapper[property](value);
     }
+    entry.destination[0].isChecked = true;
+    //console.log(entry);
     return entry;
   }
 
-  _filterObject(itemId, object) {
+  _filterObjectById(itemId, object) {
     let foundOffer = object.filter(item => item.id === Number(itemId))[0];
+    return foundOffer;
+  }
+  _filterObjectByName(itemName, object) {
+    let foundOffer = object.filter(item => item.name === itemName);
     return foundOffer;
   }
   _onResetTripForm() {
@@ -68,11 +75,11 @@ export default class TripEdit extends Component {
   }
   createMapper(target) {
     return {
-      [`travel-way`]: (value) => target.travelWay = this._filterObject(value, this._travelWay),
-      destination: (value) => target.destination = value,
+      [`travel-way`]: (value) => target.travelWay = this._filterObjectById(value, this._travelWay),
+      destination: (value) => target.destination = this._filterObjectByName(value, this._destination),
       time: (value) => target.time = value,
       price: (value) => target.price = value,
-      offer: (value) => target.offers.push(this._filterObject(value, this._offers)),
+      offer: (value) => target.offers.push(this._filterObjectById(value, this._offers)),
       favorite: (value) => target.isFavorite = value
     };
   }
@@ -99,9 +106,9 @@ export default class TripEdit extends Component {
     
           <div class="point__destination-wrap">
             <label class="point__destination-label" for="destination">Flight to</label>
-            <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination[0]}" name="destination">
+            <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination.filter((it)=> it.isChecked === true)[0].name}" name="destination">
             <datalist id="destination-select">
-              ${ [...this._destination].map((it) => `<option value="${it}"></option>`).join(``)}
+              ${ [...this._destination].map((it) => `<option value="${it.name}"></option>`).join(``)}
             </datalist>
           </div>
     
@@ -170,5 +177,8 @@ export default class TripEdit extends Component {
   _onChangeRepeated() {}
   set onSubmit(fn) {
     this._onSubmit = fn;
+  }
+  set onDelete(fn){
+    this._onDelete = fn;
   }
 }
