@@ -2,8 +2,21 @@
 import {boardTrips, boardMainFilters} from "./store/const";
 import {mockData, filters} from "./store/tripsData";
 import Trip from "./components/trip";
-import TripEdit from "./components/trip-edit";
+import TripEdit from "./components/tripEdit";
 import Filter from "./components/filter";
+import API from "./components/API";
+const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
+const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
+const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+
+api.getPoints()
+  .then((points)=>{
+    boardTrips.innerHTML = ``;
+    points.forEach((item)=>{
+      tripEventInit(item);
+    });
+    filtersInit(filters, points);
+  });
 
 const tripsContainer = boardTrips;
 const tripsArray = mockData();
@@ -63,6 +76,6 @@ const filtersInit = (filtersData, trips) => {
   });
 };
 
-renderTrips(tripsArray);
+//renderTrips(tripsArray);
 
-filtersInit(filters, tripsArray);
+

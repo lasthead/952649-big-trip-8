@@ -4,8 +4,8 @@ import flatpickr from "flatpickr";
 export default class TripEdit extends Component {
   constructor(data) {
     super();
-    this._travelWay = data.travelWay;
-    this._travelWayChecked = data.travelWay.filter((it)=> it.isChecked === true)[0];
+    this._travelType = data.travelType;
+    this._travelTypeChecked = data.travelType;
     this._destination = data.destination;
     this._dateFrom = data.dateFrom;
     this._dateTo = data.dateTo;
@@ -21,7 +21,7 @@ export default class TripEdit extends Component {
   }
   _processForm(formData) {
     const entry = {
-      travelWay: {},
+      travelType: {},
       destination: ``,
       time: ``,
       price: ``,
@@ -59,7 +59,20 @@ export default class TripEdit extends Component {
     typeof this._onSubmit === `function` && this._onSubmit(newData);
   }
   _initFlatPickr() {
-    flatpickr(this._element.querySelector(`.date-value`), {
+    flatpickr(this._element.querySelector(`.date__from`), {
+      'mode': `range`,
+      'enableTime': true,
+      'dateFormat': `H:i`,
+      'defaultDate': [this._dateFrom, this._dateTo],
+      'minDate': `today`,
+      'time_24hr': true,
+      'appendTo': this._element,
+      onChange(selectedDates) {
+        this._dateFrom = selectedDates[0];
+        this._dateTo = selectedDates[1];
+      },
+    });
+    flatpickr(this._element.querySelector(`.date__to`), {
       'mode': `range`,
       'enableTime': true,
       'dateFormat': `H:i`,
@@ -75,7 +88,7 @@ export default class TripEdit extends Component {
   }
   createMapper(target) {
     return {
-      [`travel-way`]: (value) => target.travelWay = this._filterObjectById(value, this._travelWay),
+      [`travel-way`]: (value) => target.travelType = this._filterObjectById(value, this._travelType),
       destination: (value) => target.destination = this._filterObjectByName(value, this._destination),
       time: (value) => target.time = value,
       price: (value) => target.price = value,
@@ -93,11 +106,11 @@ export default class TripEdit extends Component {
           </label>
     
           <div class="travel-way">
-            <label class="travel-way__label" for="travel-way__toggle">${this._travelWayChecked.icon}️</label>
-            <input value="${this._travelWayChecked.name}" type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
+            <label class="travel-way__label" for="travel-way__toggle">${this._travelTypeChecked.icon}️</label>
+            <input value="${this._travelTypeChecked.name}" type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
             <div class="travel-way__select">
               <div class="travel-way__select-group">
-                ${ [...this._travelWay].map((it) =>
+                ${ [...this._travelType].map((it) =>
     `<input class="travel-way__select-input visually-hidden" type="radio" ${it.isChecked ? `checked` : ``} id="travel-way-${it.name.toLowerCase().trim()}" name="travel-way" value="${it.id}">
                 <label class="travel-way__select-label" for="travel-way-${it.name.toLowerCase().trim()}">${it.icon} ${it.name}</label>`).join(``) }
               </div>
@@ -111,11 +124,12 @@ export default class TripEdit extends Component {
               ${ [...this._destination].map((it) => `<option value="${it.name}"></option>`).join(``)}
             </datalist>
           </div>
-    
-          <label class="point__time">
+          
+          <div class="point__time">
             choose time
-            <input class="point__input date-value" type="text" value="" name="time" placeholder="00:00 — 00:00">
-          </label>
+            <input class="point__input date__from" type="text" value="19:00" name="date-start" placeholder="19:00">
+            <input class="point__input date__to" type="text" value="21:00" name="date-end" placeholder="21:00">
+          </div>
     
           <label class="point__price">
             write price
