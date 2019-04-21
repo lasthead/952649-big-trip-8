@@ -23,13 +23,17 @@ export default class API {
 
   getDestinations() {
     return this._load({url: `destinations`})
-    .then(toJSON)
-    .then(ModelTrips.parseTrip);
+    .then(toJSON);
+    //.then(ModelTrips.parseTrip);
   }
   getPoints() {
     return this._load({url: `points`})
     .then(toJSON)
     .then(ModelTrips.parsePoints);
+  }
+  getOffers() {
+    return this._load({url: `offers`})
+      .then(toJSON);
   }
   createTask({task}) {
   }

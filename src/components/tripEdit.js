@@ -1,5 +1,7 @@
 import Component from './component';
 import flatpickr from "flatpickr";
+import {timeFormatter, travelTypeIcons} from "../store/const";
+import {destinations, offers} from "../main";
 
 export default class TripEdit extends Component {
   constructor(data) {
@@ -12,13 +14,15 @@ export default class TripEdit extends Component {
     this._currency = data.currency;
     this._price = data.price;
     this._offers = data.offers;
-    this._about = data.about;
+    this._description = data.description;
     this._pictures = data.pictures;
     this._element = null;
     this._onSubmit = null;
     this._onReset = null;
     this._onDelete = null;
+    console.log(offers);
   }
+
   _processForm(formData) {
     const entry = {
       travelType: {},
@@ -26,7 +30,7 @@ export default class TripEdit extends Component {
       time: ``,
       price: ``,
       offers: [],
-      isFavorite: false
+      isFavorite: false,
     };
     const tripEditMapper = this.createMapper(entry);
     for (const pair of formData.entries()) {
@@ -42,28 +46,33 @@ export default class TripEdit extends Component {
     let foundOffer = object.filter(item => item.id === Number(itemId))[0];
     return foundOffer;
   }
+
   _filterObjectByName(itemName, object) {
     let foundOffer = object.filter(item => item.name === itemName);
     return foundOffer;
   }
+
   _onResetTripForm() {
     return typeof this._onSubmit === `function` && this._onReset();
   }
+
   _partialUpdate() {
     this._element.innerHTML = this.template;
   }
+
   _onSaveTripForm(evt) {
     evt.preventDefault();
     const formData = new FormData(this._element.querySelector(`.point__form`));
     const newData = this._processForm(formData);
     typeof this._onSubmit === `function` && this._onSubmit(newData);
   }
+
   _initFlatPickr() {
     flatpickr(this._element.querySelector(`.date__from`), {
       'mode': `range`,
       'enableTime': true,
       'dateFormat': `H:i`,
-      'defaultDate': [this._dateFrom, this._dateTo],
+      'defaultDate': [this._dateFrom],
       'minDate': `today`,
       'time_24hr': true,
       'appendTo': this._element,
@@ -76,7 +85,7 @@ export default class TripEdit extends Component {
       'mode': `range`,
       'enableTime': true,
       'dateFormat': `H:i`,
-      'defaultDate': [this._dateFrom, this._dateTo],
+      'defaultDate': [this._dateTo],
       'minDate': `today`,
       'time_24hr': true,
       'appendTo': this._element,
@@ -86,6 +95,7 @@ export default class TripEdit extends Component {
       },
     });
   }
+
   createMapper(target) {
     return {
       [`travel-way`]: (value) => target.travelType = this._filterObjectById(value, this._travelType),
@@ -93,9 +103,10 @@ export default class TripEdit extends Component {
       time: (value) => target.time = value,
       price: (value) => target.price = value,
       offer: (value) => target.offers.push(this._filterObjectById(value, this._offers)),
-      favorite: (value) => target.isFavorite = value
+      favorite: (value) => target.isFavorite = value,
     };
   }
+
   get template() {
     return `<article class="point">
       <form class="point__form" action="" method="get">
@@ -106,29 +117,29 @@ export default class TripEdit extends Component {
           </label>
     
           <div class="travel-way">
-            <label class="travel-way__label" for="travel-way__toggle">${this._travelTypeChecked.icon}️</label>
-            <input value="${this._travelTypeChecked.name}" type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
+            <label class="travel-way__label" for="travel-way__toggle">${travelTypeIcons[this._travelTypeChecked]}</label>
+            <input value="${this._travelTypeChecked}" type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
             <div class="travel-way__select">
               <div class="travel-way__select-group">
-                ${ [...this._travelType].map((it) =>
-    `<input class="travel-way__select-input visually-hidden" type="radio" ${it.isChecked ? `checked` : ``} id="travel-way-${it.name.toLowerCase().trim()}" name="travel-way" value="${it.id}">
-                <label class="travel-way__select-label" for="travel-way-${it.name.toLowerCase().trim()}">${it.icon} ${it.name}</label>`).join(``) }
+              <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${this._travelTypeChecked.toLowerCase().trim()}" name="travel-way" value="">
+               <label class="travel-way__select-label" for="travel-way-${this._travelTypeChecked.toLowerCase().trim()}">${travelTypeIcons[this._travelTypeChecked]} ${this._travelTypeChecked}</label>
+               ${this._getOffersOptions()}
               </div>
             </div>
           </div>
     
           <div class="point__destination-wrap">
             <label class="point__destination-label" for="destination">Flight to</label>
-            <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination.filter((it)=> it.isChecked === true)[0].name}" name="destination">
+            <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination.name}" name="destination">
             <datalist id="destination-select">
-              ${ [...this._destination].map((it) => `<option value="${it.name}"></option>`).join(``)}
+              ${this._getDestinationOptions()}
             </datalist>
           </div>
           
           <div class="point__time">
             choose time
-            <input class="point__input date__from" type="text" value="19:00" name="date-start" placeholder="19:00">
-            <input class="point__input date__to" type="text" value="21:00" name="date-end" placeholder="21:00">
+            <input class="point__input date__from" type="text" value="${timeFormatter(this._dateFrom)}" name="date-start" placeholder="${this._dateFrom}">
+            <input class="point__input date__to" type="text" value="${timeFormatter(this._dateTo)}" name="date-end" placeholder="${this._dateTo}">
           </div>
     
           <label class="point__price">
@@ -153,22 +164,22 @@ export default class TripEdit extends Component {
             <h3 class="point__details-title">offers</h3>
     
             <div class="point__offers-wrap">
-              ${ [...this._offers].map((offer) => `
-              <input ${offer.isChecked ? `checked` : ``} class="point__offers-input visually-hidden" type="checkbox" id="${offer.name.toLowerCase().trim()}" name="offer" value="${offer.id}">
-              <label for="${offer.name.toLowerCase().trim()}" class="point__offers-label">
-                <span class="point__offer-service">${offer.name}</span> ${offer.currency}<span class="point__offer-price">${offer.price}</span>
+              ${[...this._offers].map((offer) => `
+              <input ${offer.accepted ? `checked` : ``} class="point__offers-input visually-hidden" type="checkbox" id="${offer.title.toLowerCase().trim()}" name="offer" value="${offer.id}">
+              <label for="${offer.title.toLowerCase().trim()}" class="point__offers-label">
+                <span class="point__offer-service">${offer.title}</span> €<span class="point__offer-price">${offer.price}</span>
               </label>
-              `).join(``) }
+              `).join(``)}
             </div>
     
           </section>
           <section class="point__destination">
             <h3 class="point__details-title">Destination</h3>
-            <p class="point__destination-text">${this._about}</p>
+            <p class="point__destination-text">${this._description}</p>
             <div class="point__destination-images">
-            ${ [...this._pictures].map((picture) => `
-              <img src="${ picture }" alt="picture from place" class="point__destination-image">
-            `).join(``) }
+            ${[...this._pictures].map((picture) => `
+              <img src="${picture.src}" alt="${picture.description}" class="point__destination-image">
+            `).join(``)}
             </div>
           </section>
           <input type="hidden" class="point__total-price" name="total-price" value="">
@@ -176,9 +187,32 @@ export default class TripEdit extends Component {
       </form>
     </article>`.trim();
   }
+
+  _getDestinationOptions() {
+    const result = [];
+    for (const destination of destinations) {
+      const dataElement = `<option value="${destination.name}"></option>`;
+      result.push(dataElement);
+    }
+    return result.join(``);
+  }
+
+  _getOffersOptions() {
+    const result = [];
+    for (const offer of offers) {
+      const dataElement = `
+         <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${offer.type.toLowerCase().trim()}" name="travel-way" value="">
+         <label class="travel-way__select-label" for="travel-way-${offer.type.toLowerCase().trim()}">${travelTypeIcons[offer.type]} ${offer.type}</label>
+      `;
+      result.push(dataElement);
+    }
+    return result.join(``);
+  }
+
   onClick(fn) {
     this._onClick = fn;
   }
+
   bind() {
     this._element.querySelector(`button[type="submit"]`)
       .addEventListener(`click`, this._onSaveTripForm.bind(this));
@@ -187,12 +221,18 @@ export default class TripEdit extends Component {
     this._initFlatPickr();
     //console.log(this);
   }
-  _onChangeDate() {}
-  _onChangeRepeated() {}
+
+  _onChangeDate() {
+  }
+
+  _onChangeRepeated() {
+  }
+
   set onSubmit(fn) {
     this._onSubmit = fn;
   }
-  set onDelete(fn){
+
+  set onDelete(fn) {
     this._onDelete = fn;
   }
 }

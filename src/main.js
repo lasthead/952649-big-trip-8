@@ -8,7 +8,17 @@ import API from "./components/API";
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
 const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
-
+let destinations = [];
+let offers = [];
+api.getOffers()
+  .then((response)=> {
+    offers = response;
+  });
+api.getDestinations()
+  .then((response)=> {
+    destinations = response;
+  });
+export {destinations, offers};
 api.getPoints()
   .then((points)=>{
     boardTrips.innerHTML = ``;

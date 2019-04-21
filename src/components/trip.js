@@ -44,7 +44,5 @@ export default class Trip extends Component {
     this._travelType = data.travelType.filter((it)=> it.isChecked === true)[0];
     this._destination = data.destination.filter((it)=> it.isChecked === true)[0];
     this._price = data.price;
-    //this._offers = data.offers.filter((it)=> it.isChecked === true)[0];
-    console.log(this);
   }
 }

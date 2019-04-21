@@ -21,4 +21,5 @@ export default class ModelTrips {
   static parsePoints(data) {
     return data.map(ModelTrips.parsePoint);
   }
-};
+}
+
