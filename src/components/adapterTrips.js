@@ -1,4 +1,4 @@
-export default class ModelTrips {
+export default class AdapterTrips {
   constructor(data) {
 
     this.id = data[`id`];
@@ -15,11 +15,11 @@ export default class ModelTrips {
   }
 
   static parsePoint(data) {
-    return new ModelTrips(data);
+    return new AdapterTrips(data);
   }
 
   static parsePoints(data) {
-    return data.map(ModelTrips.parsePoint);
+    return data.map(AdapterTrips.parsePoint);
   }
 }
 

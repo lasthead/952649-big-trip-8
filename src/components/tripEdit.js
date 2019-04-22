@@ -2,6 +2,7 @@ import Component from './component';
 import flatpickr from "flatpickr";
 import {timeFormatter, travelTypeIcons} from "../store/const";
 import {destinations, offers} from "../main";
+import { find } from 'lodash';
 
 export default class TripEdit extends Component {
   constructor(data) {
@@ -20,7 +21,6 @@ export default class TripEdit extends Component {
     this._onSubmit = null;
     this._onReset = null;
     this._onDelete = null;
-    console.log(offers);
   }
 
   _processForm(formData) {
@@ -117,13 +117,13 @@ export default class TripEdit extends Component {
           </label>
     
           <div class="travel-way">
-            <label class="travel-way__label" for="travel-way__toggle">${travelTypeIcons[this._travelTypeChecked]}</label>
-            <input value="${this._travelTypeChecked}" type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
+            <label class="travel-way__label" for="travel-way__toggle">${travelTypeIcons[this._travelType]}</label>
+            <input value="${this._travelType}" type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
             <div class="travel-way__select">
               <div class="travel-way__select-group">
-              <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${this._travelTypeChecked.toLowerCase().trim()}" name="travel-way" value="">
-               <label class="travel-way__select-label" for="travel-way-${this._travelTypeChecked.toLowerCase().trim()}">${travelTypeIcons[this._travelTypeChecked]} ${this._travelTypeChecked}</label>
-               ${this._getOffersOptions()}
+              <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${this._travelType.toLowerCase().trim()}" name="travel-way" value="">
+               <label class="travel-way__select-label" for="travel-way-${this._travelType.toLowerCase().trim()}">${travelTypeIcons[this._travelType]} ${this._travelType}</label>
+               ${this._getTypesOptions()}
               </div>
             </div>
           </div>
@@ -191,21 +191,40 @@ export default class TripEdit extends Component {
   _getDestinationOptions() {
     const result = [];
     for (const destination of destinations) {
-      const dataElement = `<option value="${destination.name}"></option>`;
+      const dataElement = `<option data-hui="${destination.id}" value="${destination.name}"></option>`;
       result.push(dataElement);
     }
     return result.join(``);
   }
+  _onSelectTripTypeOption(evt) {
+    if (evt.target.tagName === `INPUT`) {
+      let newOfferTypeId = evt.target.value;
+      let newTypePoint = _.find(offers, (item)=> item.id === Number(newOfferTypeId));
 
-  _getOffersOptions() {
+      this._offers = newTypePoint.offers;
+      this._travelType = newTypePoint.type;
+      this.reRender();
+    }
+  }
+  _onSelectDestinationOption(evt) {
+    let newDestinationName = evt.target.value;
+    let newDestination = _.find(destinations, (item)=> item.name === newDestinationName);
+    this._destination = newDestination;
+    this._description = newDestination.description;
+    this._pictures = newDestination.pictures;
+    this.reRender();
+
+  }
+  _getTypesOptions() {
     const result = [];
     for (const offer of offers) {
       const dataElement = `
-         <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${offer.type.toLowerCase().trim()}" name="travel-way" value="">
-         <label class="travel-way__select-label" for="travel-way-${offer.type.toLowerCase().trim()}">${travelTypeIcons[offer.type]} ${offer.type}</label>
+         <input class="travel-way__select-input visually-hidden destination--option" type="radio" id="travel-way-${offer.type.toLowerCase().trim()}" name="travel-way" value="${offer.id}">
+         <label class="travel-way__select-label " for="travel-way-${offer.type.toLowerCase().trim()}">${travelTypeIcons[offer.type]} ${offer.type}</label>
       `;
       result.push(dataElement);
     }
+    //console.log(offers);
     return result.join(``);
   }
 
@@ -219,7 +238,11 @@ export default class TripEdit extends Component {
     this._element.querySelector(`button[type="reset"]`)
       .addEventListener(`click`, this._onResetTripForm.bind(this));
     this._initFlatPickr();
-    //console.log(this);
+
+    this._element.querySelector(`.travel-way__select`)
+      .addEventListener(`click`, this._onSelectTripTypeOption.bind(this));
+    this._element.querySelector(`#destination`)
+      .addEventListener(`change`, this._onSelectDestinationOption.bind(this));
   }
 
   _onChangeDate() {

@@ -1,4 +1,8 @@
-import ModelTrips from './modelTrips';
+import AdapterTrips from './adapterTrips';
+import AdapterOffers from './adapterOffers';
+import AdapterDestinations from './adapterDestinations';
+
+
 const Method = {
   GET: `GET`,
   POST: `POST`,
@@ -23,17 +27,18 @@ export default class API {
 
   getDestinations() {
     return this._load({url: `destinations`})
-    .then(toJSON);
-    //.then(ModelTrips.parseTrip);
+    .then(toJSON)
+    .then(AdapterDestinations.parseDestinations);
   }
   getPoints() {
     return this._load({url: `points`})
     .then(toJSON)
-    .then(ModelTrips.parsePoints);
+    .then(AdapterTrips.parsePoints);
   }
   getOffers() {
     return this._load({url: `offers`})
-      .then(toJSON);
+      .then(toJSON)
+      .then(AdapterOffers.parseOffers);
   }
   createTask({task}) {
   }
