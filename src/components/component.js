@@ -14,6 +14,9 @@ export default class Component {
   get template() {
     throw new Error(`You have to define template.`);
   }
+  get _partialUpdate() {
+    throw new Error(`You have to define partialUpdate.`);
+  }
   render() {
     this._element = createElement(this.template);
     this.bind();
@@ -23,6 +26,11 @@ export default class Component {
     this.unbind();
     this._element.remove();
     this._element = null;
+  }
+  reRender() {
+    this.unbind();
+    this._partialUpdate();
+    this.bind();
   }
   bind() {}
   unbind() {}

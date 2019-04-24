@@ -2,7 +2,22 @@
 export const mainFilter = document.querySelector(`.trip-filter`);
 export const boardTrips = document.querySelector(`.trip-day__items`);
 export const boardMainFilters = document.querySelector(`.trip-filter`);
+export const travelTypeIcons = {
+  'taxi': `🚕`,
+  'bus': `🚌`,
+  'train': `🚂`,
+  'ship': `🛳`,
+  'transport': `🚊`,
+  'drive': `🚗`,
+  'flight': `✈️`,
+  'check-in': `🏨`,
+  'sightseeing': `🏛️`,
+  'restaurant': `🍴`,
+};
 
+export const strLetterToCapital = (str, pos = 0) => {
+  return str.charAt(Number(pos)).toUpperCase() + str.slice(Number(pos) + 1);
+};
 export const rmSpaces = (str) => {
   str = str.replace(/\s/g, ``);
   return str;
