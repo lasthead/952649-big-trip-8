@@ -19,7 +19,6 @@ export default class Trip extends Component {
     return typeof this._onClick === `function` && this._onClick();
   }
   get template() {
-    //console.log(this);
     return `<article class="trip-point">
           <i class="trip-icon">${ travelTypeIcons[this._travelType] }</i>
           <h3 class="trip-point__title">${ strLetterToCapital(this._travelType) } to ${ this._destination.name }</h3>
@@ -44,5 +43,6 @@ export default class Trip extends Component {
     this._travelType = data.travelType;
     this._destination = data.destination;
     this._price = data.price;
+    this._offers = data.offers;
   }
 }

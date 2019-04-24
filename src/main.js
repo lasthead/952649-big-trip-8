@@ -1,5 +1,5 @@
 
-import {boardTrips, boardMainFilters} from "./store/const";
+import {boardTrips, boardMainFilters, messageLoading} from "./store/const";
 import {filters} from "./store/tripsData";
 import Trip from "./components/trip";
 import TripEdit from "./components/tripEdit";
@@ -19,11 +19,17 @@ api.getDestinations()
     destinations = response;
   });
 export {destinations, offers};
+
+boardTrips.innerHTML = messageLoading;
 api.getPoints()
   .then((points)=>{
     boardTrips.innerHTML = ``;
     points.forEach((item)=>{
       tripEventInit(item);
+    })
+    .catch((err) => {
+      boardTrips.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later. fetch error: ${err}`;
+      throw err;
     });
     filtersInit(filters, points);
   });
@@ -45,14 +51,23 @@ const tripEventInit = (trip)=>{
   };
   tripPointEdit.onSubmit = (newObject) => {
     trip = updateTrip(trip, trip.id, newObject);
-    //console.log(trip);
-    tripPoint.update(trip);
-    tripPoint.render();
-    tripsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
-    tripPointEdit.unrender();
+    api.updatePoint(trip)
+      .then(() => {
+        tripPoint.update(trip);
+        tripPoint.render();
+        tripsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
+        tripPointEdit.unrender();
+      })
+      .catch((err) => {
+        boardTrips.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later. fetch error: ${err}`;
+        throw err;
+      });
   };
   tripPointEdit.reset = () => {
-    tripPointEdit.unrender(tripsContainer);
+    api.deletePoint(trip)
+      .then(()=>{
+        tripPointEdit.unrender(tripsContainer);
+      });
   };
 };
 

@@ -38,19 +38,21 @@ export default class TripEdit extends Component {
     const tripEditMapper = this.createMapper(entry);
     for (const pair of formData.entries()) {
       const [property, value] = pair;
+      //console.log(pair);
       tripEditMapper[property] && tripEditMapper[property](value);
     }
-    console.log(entry);
+
     return entry;
   }
 
-  _filterObjectById(itemId, object) {
+  _filterOffersById(itemId, object) {
     let foundOffer = object.filter(item => item.id === Number(itemId))[0];
+    foundOffer.accepted = true;
     return foundOffer;
   }
 
   _filterObjectByName(itemName, object) {
-    let foundOffer = object.filter(item => item.name === itemName);
+    let foundOffer = object.filter(item => item.name === itemName)[0];
     return foundOffer;
   }
 
@@ -101,11 +103,12 @@ export default class TripEdit extends Component {
   createMapper(target) {
     return {
       [`travel-way-selected`]: (value) => target.travelType = value,
-      [`destination-selected`]: (value) => target.destination = this._filterObjectByName(value, destinations)[0],
+      [`destination-selected`]: (value) => target.destination = this._filterObjectByName(value, destinations),
       time: (value) => target.time = value,
       price: (value) => target.price = value,
-      offer: (value) => target.offers.push(value),
+      offer: (value) => target.offers.push(this._filterOffersById(value, this._offers)),
       favorite: (value) => target.isFavorite = value,
+
     };
   }
 
@@ -199,6 +202,7 @@ export default class TripEdit extends Component {
     for (const offerObject of offers) {
 
       if (offerObject.type === this._travelType) {
+        this._offers = offerObject.offers;
         result = [...offerObject.offers].map((offer)=>
           `<input ${offer.accepted ? `checked` : ``} class="point__offers-input visually-hidden" type="checkbox" id="${offer.title.toLowerCase().trim()}" name="offer" value="${offer.id}">
               <label for="${offer.title.toLowerCase().trim()}" class="point__offers-label">
