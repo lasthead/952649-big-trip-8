@@ -2,18 +2,15 @@ import Component from './component';
 import flatpickr from "flatpickr";
 import {timeFormatter, travelTypeIcons} from "../store/const";
 import {destinations, offers} from "../main";
-import { find } from 'lodash';
 
 export default class TripEdit extends Component {
   constructor(data) {
     super();
     this._id = data.id;
     this._travelType = data.travelType;
-    this._travelTypeChecked = data.travelType;
     this._destination = data.destination;
     this._dateFrom = data.dateFrom;
     this._dateTo = data.dateTo;
-    this._currency = data.currency;
     this._price = data.price;
     this._offers = data.offers;
     this._description = data.description;
@@ -21,8 +18,6 @@ export default class TripEdit extends Component {
     this._element = null;
     this._onSubmit = null;
     this._onReset = null;
-    this._onDelete = null;
-    //console.log(offers);
   }
 
   _processForm(formData) {
@@ -38,7 +33,6 @@ export default class TripEdit extends Component {
     const tripEditMapper = this.createMapper(entry);
     for (const pair of formData.entries()) {
       const [property, value] = pair;
-      //console.log(pair);
       tripEditMapper[property] && tripEditMapper[property](value);
     }
 
@@ -46,13 +40,13 @@ export default class TripEdit extends Component {
   }
 
   _filterOffersById(itemId, object) {
-    let foundOffer = object.filter(item => item.id === Number(itemId))[0];
+    let foundOffer = object.filter((item) => item.id === Number(itemId))[0];
     foundOffer.accepted = true;
     return foundOffer;
   }
 
   _filterObjectByName(itemName, object) {
-    let foundOffer = object.filter(item => item.name === itemName)[0];
+    let foundOffer = object.filter((item) => item.name === itemName)[0];
     return foundOffer;
   }
 
@@ -102,12 +96,12 @@ export default class TripEdit extends Component {
 
   createMapper(target) {
     return {
-      [`travel-way-selected`]: (value) => target.travelType = value,
-      [`destination-selected`]: (value) => target.destination = this._filterObjectByName(value, destinations),
-      time: (value) => target.time = value,
-      price: (value) => target.price = value,
-      offer: (value) => target.offers.push(this._filterOffersById(value, this._offers)),
-      favorite: (value) => target.isFavorite = value,
+      [`travel-way-selected`]: (value) => (target.travelType = value),
+      [`destination-selected`]: (value) => (target.destination = this._filterObjectByName(value, destinations)),
+      time: (value) => (target.time = value),
+      price: (value) => (target.price = value),
+      offer: (value) => (target.offers.push(this._filterOffersById(value, this._offers))),
+      favorite: (value) => (target.isFavorite = value),
 
     };
   }
@@ -229,7 +223,6 @@ export default class TripEdit extends Component {
   _onSelectDestinationOption(evt) {
     let newDestinationName = evt.target.value;
     let newDestination = _.find(destinations, (item)=> item.name === newDestinationName);
-    //console.log(this._destination);
     this._destination = newDestination;
 
     this._description = newDestination.description;
@@ -246,7 +239,6 @@ export default class TripEdit extends Component {
       `;
       result.push(dataElement);
     }
-    //console.log(offers);
     return result.join(``);
   }
 

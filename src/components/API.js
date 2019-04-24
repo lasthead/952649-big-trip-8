@@ -40,9 +40,6 @@ export default class API {
       .then(toJSON)
       .then(AdapterOffers.parseOffers);
   }
-  createTask({task}) {
-  }
-
   updatePoint(point) {
     return this._load({
       url: `points/${point.id}`,
@@ -64,8 +61,8 @@ export default class API {
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
       .then(checkStatus)
       .catch((err) => {
-        console.error(`fetch error: ${err}`);
         throw err;
       });
   }
-};
+}
+

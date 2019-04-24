@@ -1,4 +1,3 @@
-import {getRandomNumberRange} from './../../store/const';
 export default (offers) => {
   const offerMarkdown = [...offers].map((it) =>
     `<li>
