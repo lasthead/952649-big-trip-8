@@ -34,8 +34,8 @@ export default class TripEdit extends Component {
     for (const pair of formData.entries()) {
       const [property, value] = pair;
       if (tripEditMapper[property]) {
-        tripEditMapper[property] && tripEditMapper[property](value);
-      };
+        tripEditMapper[property](value);
+      }
     }
 
     return entry;
@@ -64,7 +64,7 @@ export default class TripEdit extends Component {
     evt.preventDefault();
     const formData = new FormData(this._element.querySelector(`.point__form`));
     const newData = this._processForm(formData);
-    typeof this._onSubmit === `function` && this._onSubmit(newData);
+    this._onSubmit(newData);
   }
 
   _initFlatPickr() {
