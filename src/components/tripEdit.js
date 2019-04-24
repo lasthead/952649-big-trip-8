@@ -2,7 +2,7 @@ import Component from './component';
 import flatpickr from "flatpickr";
 import {timeFormatter, travelTypeIcons} from "../store/const";
 import {destinations, offers} from "../main";
-
+import {_} from "lodash";
 export default class TripEdit extends Component {
   constructor(data) {
     super();
@@ -33,7 +33,9 @@ export default class TripEdit extends Component {
     const tripEditMapper = this.createMapper(entry);
     for (const pair of formData.entries()) {
       const [property, value] = pair;
-      tripEditMapper[property] && tripEditMapper[property](value);
+      if (tripEditMapper[property]) {
+        tripEditMapper[property] && tripEditMapper[property](value);
+      };
     }
 
     return entry;

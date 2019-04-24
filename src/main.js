@@ -1,9 +1,11 @@
 
-import {boardTrips, boardMainFilters, messageLoading} from "./store/const";
-import {filters} from "./store/tripsData";
+import {boardTrips, boardMainFilters, boardMainSortButtons, messageLoading, calculatePrice} from "./store/const";
+import {filters, sort} from "./store/tripsData";
+import moment from "moment";
 import Trip from "./components/trip";
 import TripEdit from "./components/tripEdit";
 import Filter from "./components/filter";
+import Sort from "./components/sort";
 import API from "./components/API";
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
 const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
@@ -32,6 +34,7 @@ api.getPoints()
       throw err;
     });
     filtersInit(filters, points);
+    sortInit(sort, points);
   });
 
 const tripsContainer = boardTrips;
@@ -83,6 +86,21 @@ const filterSearch = (filterValue, trips) => {
   }
 };
 
+const sortTrips = (sortValue, trips) => {
+  switch (sortValue) {
+    case `sorting-event`:
+      return trips.sort((a, b) => (a.id > b.id ? 1 : -1));
+    case `sorting-time`:
+      return trips.sort((a, b) =>
+        moment(a.timeStart) - moment(a.timeEnd) > moment(b.timeStart) - moment(b.timeEnd) ? 1 : -1
+      );
+    case `sorting-price`:
+      return trips.sort((a, b) => calculatePrice(a) < calculatePrice(b) ? 1 : -1);
+    default:
+      return trips;
+  }
+};
+
 const filtersInit = (filtersData, trips) => {
   filtersData.forEach((item)=>{
     const filter = new Filter(item);
@@ -97,4 +115,17 @@ const filtersInit = (filtersData, trips) => {
   });
 };
 
+const sortInit = (sortData, trips) => {
+  sortData.forEach((item)=>{
+    const sortButton = new Sort(item);
+    boardMainSortButtons.appendChild(sortButton.render());
+    sortButton.onFilter = (event) => {
+      boardTrips.innerHTML = ``;
+      const sortItems = sortTrips(event.target.value, trips);
+      sortItems.forEach((filteredItem)=>{
+        tripEventInit(filteredItem);
+      });
+    };
+  });
+}
 

@@ -2,6 +2,7 @@
 export const mainFilter = document.querySelector(`.trip-filter`);
 export const boardTrips = document.querySelector(`.trip-day__items`);
 export const boardMainFilters = document.querySelector(`.trip-filter`);
+export const boardMainSortButtons = document.querySelector(`.trip-sorting`);
 export const messageLoading = `Loading route...`;
 export const travelTypeIcons = {
   'taxi': `🚕`,
@@ -52,4 +53,15 @@ export const getRandomPhotosArray = (count) => {
     result.push(`http://picsum.photos/300/150?r=${Math.random()}`);
   }
   return result;
+};
+
+export const calculatePrice = (item) => {
+  let fullPriceTemp = 0;
+  fullPriceTemp += +item.price;
+  for (let offer of item.offers) {
+    if (offer.accepted) {
+      fullPriceTemp += +offer.price;
+    }
+  }
+  return fullPriceTemp;
 };
