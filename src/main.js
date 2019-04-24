@@ -127,5 +127,5 @@ const sortInit = (sortData, trips) => {
       });
     };
   });
-}
+};
 
