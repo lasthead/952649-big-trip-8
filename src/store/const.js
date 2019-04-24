@@ -2,6 +2,7 @@
 export const mainFilter = document.querySelector(`.trip-filter`);
 export const boardTrips = document.querySelector(`.trip-day__items`);
 export const boardMainFilters = document.querySelector(`.trip-filter`);
+export const messageLoading = `Loading route...`;
 export const travelTypeIcons = {
   'taxi': `🚕`,
   'bus': `🚌`,

@@ -43,10 +43,19 @@ export default class API {
   createTask({task}) {
   }
 
-  updateTask({id, data}) {
+  updatePoint(point) {
+    return this._load({
+      url: `points/${point.id}`,
+      method: Method.PUT,
+      body: JSON.stringify(point),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then(toJSON)
+      .then(AdapterTrips.parsePoint);
   }
 
-  deleteTask({id}) {
+  deletePoint({id}) {
+    return this._load({url: `points/${id}`, method: Method.DELETE});
   }
 
   _load({url, method = Method.GET, body = null, headers = new Headers()}) {
