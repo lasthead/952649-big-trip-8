@@ -41,8 +41,8 @@ export default class Trip extends Component {
     this._element.addEventListener(`click`, this._onEditButtonClick.bind(this));
   }
   update(data) {
-    this._travelType = data.travelType.filter((it)=> it.isChecked === true)[0];
-    this._destination = data.destination.filter((it)=> it.isChecked === true)[0];
+    this._travelType = data.travelType;
+    this._destination = data.destination;
     this._price = data.price;
   }
 }

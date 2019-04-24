@@ -30,7 +30,6 @@ api.getPoints()
 
 const tripsContainer = boardTrips;
 const updateTrip = (trip, i, newTrip) => {
-
   trip = Object.assign({}, trip, newTrip);
   return trip;
 };
@@ -45,7 +44,8 @@ const tripEventInit = (trip)=>{
     tripPoint.unrender();
   };
   tripPointEdit.onSubmit = (newObject) => {
-    updateTrip(trip, trip.id, newObject);
+    trip = updateTrip(trip, trip.id, newObject);
+    //console.log(trip);
     tripPoint.update(trip);
     tripPoint.render();
     tripsContainer.replaceChild(tripPoint.element, tripPointEdit.element);

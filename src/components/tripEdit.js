@@ -7,6 +7,7 @@ import { find } from 'lodash';
 export default class TripEdit extends Component {
   constructor(data) {
     super();
+    this._id = data.id;
     this._travelType = data.travelType;
     this._travelTypeChecked = data.travelType;
     this._destination = data.destination;
@@ -21,12 +22,14 @@ export default class TripEdit extends Component {
     this._onSubmit = null;
     this._onReset = null;
     this._onDelete = null;
+    //console.log(offers);
   }
 
   _processForm(formData) {
     const entry = {
+      pointId: this._id,
       travelType: {},
-      destination: ``,
+      destination: {},
       time: ``,
       price: ``,
       offers: [],
@@ -37,8 +40,7 @@ export default class TripEdit extends Component {
       const [property, value] = pair;
       tripEditMapper[property] && tripEditMapper[property](value);
     }
-    entry.destination[0].isChecked = true;
-    //console.log(entry);
+    console.log(entry);
     return entry;
   }
 
@@ -98,11 +100,11 @@ export default class TripEdit extends Component {
 
   createMapper(target) {
     return {
-      [`travel-way`]: (value) => target.travelType = this._filterObjectById(value, this._travelType),
-      destination: (value) => target.destination = this._filterObjectByName(value, this._destination),
+      [`travel-way-selected`]: (value) => target.travelType = value,
+      [`destination-selected`]: (value) => target.destination = this._filterObjectByName(value, destinations)[0],
       time: (value) => target.time = value,
       price: (value) => target.price = value,
-      offer: (value) => target.offers.push(this._filterObjectById(value, this._offers)),
+      offer: (value) => target.offers.push(value),
       favorite: (value) => target.isFavorite = value,
     };
   }
@@ -117,18 +119,19 @@ export default class TripEdit extends Component {
           </label>
     
           <div class="travel-way">
+            <input value="${this._travelType}" name="travel-way-selected" type="hidden" class="visually-hidden">
+
             <label class="travel-way__label" for="travel-way__toggle">${travelTypeIcons[this._travelType]}</label>
-            <input value="${this._travelType}" type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
+            <input value="${this._travelType}" name="travel-way" type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
             <div class="travel-way__select">
               <div class="travel-way__select-group">
-              <input class="travel-way__select-input visually-hidden" type="radio" id="travel-way-${this._travelType.toLowerCase().trim()}" name="travel-way" value="">
-               <label class="travel-way__select-label" for="travel-way-${this._travelType.toLowerCase().trim()}">${travelTypeIcons[this._travelType]} ${this._travelType}</label>
                ${this._getTypesOptions()}
               </div>
             </div>
           </div>
     
           <div class="point__destination-wrap">
+            <input value="${this._destination.name}" name="destination-selected" type="hidden" class="visually-hidden">
             <label class="point__destination-label" for="destination">Flight to</label>
             <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination.name}" name="destination">
             <datalist id="destination-select">
@@ -164,12 +167,7 @@ export default class TripEdit extends Component {
             <h3 class="point__details-title">offers</h3>
     
             <div class="point__offers-wrap">
-              ${[...this._offers].map((offer) => `
-              <input ${offer.accepted ? `checked` : ``} class="point__offers-input visually-hidden" type="checkbox" id="${offer.title.toLowerCase().trim()}" name="offer" value="${offer.id}">
-              <label for="${offer.title.toLowerCase().trim()}" class="point__offers-label">
-                <span class="point__offer-service">${offer.title}</span> €<span class="point__offer-price">${offer.price}</span>
-              </label>
-              `).join(``)}
+              ${this._getOffersOptions()}
             </div>
     
           </section>
@@ -191,25 +189,45 @@ export default class TripEdit extends Component {
   _getDestinationOptions() {
     const result = [];
     for (const destination of destinations) {
-      const dataElement = `<option data-hui="${destination.id}" value="${destination.name}"></option>`;
+      const dataElement = `<option data-id="${destination.id}" value="${destination.name}"></option>`;
       result.push(dataElement);
     }
     return result.join(``);
   }
+  _getOffersOptions() {
+    let result = [];
+    for (const offerObject of offers) {
+
+      if (offerObject.type === this._travelType) {
+        result = [...offerObject.offers].map((offer)=>
+          `<input ${offer.accepted ? `checked` : ``} class="point__offers-input visually-hidden" type="checkbox" id="${offer.title.toLowerCase().trim()}" name="offer" value="${offer.id}">
+              <label for="${offer.title.toLowerCase().trim()}" class="point__offers-label">
+              <span class="point__offer-service">${offer.title}</span> €<span class="point__offer-price">${offer.price}</span>
+            </label>`
+        ).join(``);
+      }
+
+    }
+    return result;
+  }
   _onSelectTripTypeOption(evt) {
     if (evt.target.tagName === `INPUT`) {
-      let newOfferTypeId = evt.target.value;
-      let newTypePoint = _.find(offers, (item)=> item.id === Number(newOfferTypeId));
+      if (evt.target.value) {
+        let newOfferTypeId = evt.target.value;
+        let newTypePoint = _.find(offers, (item)=> item.id === Number(newOfferTypeId));
 
-      this._offers = newTypePoint.offers;
-      this._travelType = newTypePoint.type;
-      this.reRender();
+        this._offers = newTypePoint.offers;
+        this._travelType = newTypePoint.type;
+        this.reRender();
+      }
     }
   }
   _onSelectDestinationOption(evt) {
     let newDestinationName = evt.target.value;
     let newDestination = _.find(destinations, (item)=> item.name === newDestinationName);
+    //console.log(this._destination);
     this._destination = newDestination;
+
     this._description = newDestination.description;
     this._pictures = newDestination.pictures;
     this.reRender();

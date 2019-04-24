@@ -19,6 +19,10 @@ export default class AdapterTrips {
   }
 
   static parsePoints(data) {
+    data.forEach((item, i) => {
+      item.id = i;
+      i++;
+    });
     return data.map(AdapterTrips.parsePoint);
   }
 }
