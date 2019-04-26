@@ -28,13 +28,12 @@ api.getPoints()
     boardTrips.innerHTML = ``;
     points.forEach((item)=>{
       tripEventInit(item);
-    })
-    .catch((err) => {
-      boardTrips.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later. fetch error: ${err}`;
-      throw err;
     });
     filtersInit(filters, points);
     sortInit(sort, points);
+  }).catch((err) => {
+    boardTrips.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later. fetch error: ${err}`;
+    throw err;
   });
 
 const tripsContainer = boardTrips;
@@ -119,7 +118,7 @@ const sortInit = (sortData, trips) => {
   sortData.forEach((item)=>{
     const sortButton = new Sort(item);
     boardMainSortButtons.appendChild(sortButton.render());
-    sortButton.onFilter = (event) => {
+    sortButton.onClick = (event) => {
       boardTrips.innerHTML = ``;
       const sortItems = sortTrips(event.target.value, trips);
       sortItems.forEach((filteredItem)=>{

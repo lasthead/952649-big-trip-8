@@ -18,6 +18,7 @@ export default class Component {
     throw new Error(`You have to define partialUpdate.`);
   }
   render() {
+    //console.log(createElement(this.template).childNodes);
     this._element = createElement(this.template);
     this.bind();
     return this._element;
