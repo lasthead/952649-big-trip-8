@@ -42,6 +42,23 @@ const updateTrip = (trip, i, newTrip) => {
   return trip;
 };
 
+function addNewPoint() {
+  const NewPointData = {
+    type: ``,
+    dateFrom: new Date(),
+    dateTo: new Date(),
+    offers: [],
+    destination: {
+      pictures: []
+    }
+  };
+  const newTripPoint = new TripEdit(NewPointData);
+
+  tripsContainer.insertBefore(newTripPoint.render(), tripsContainer.firstChild);
+}
+document.querySelector(`.trip-controls__new-event`).addEventListener(`click`, addNewPoint);
+
+
 const tripEventInit = (trip)=>{
   const tripPoint = new Trip(trip);
   const tripPointEdit = new TripEdit(trip);

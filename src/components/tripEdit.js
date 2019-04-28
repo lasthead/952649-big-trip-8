@@ -6,7 +6,7 @@ import {_} from "lodash";
 export default class TripEdit extends Component {
   constructor(data) {
     super();
-    this._id = data.id;
+    this._id = (data && data.id) ? data.id : null;
     this._travelType = data.travelType;
     this._destination = data.destination;
     this._dateFrom = data.dateFrom;
@@ -174,9 +174,9 @@ export default class TripEdit extends Component {
             <h3 class="point__details-title">Destination</h3>
             <p class="point__destination-text">${this._description}</p>
             <div class="point__destination-images">
-            ${[...this._pictures].map((picture) => `
+            ${this._pictures ? [...this._pictures].map((picture) => `
               <img src="${picture.src}" alt="${picture.description}" class="point__destination-image">
-            `).join(``)}
+            `).join(``) : ``}
             </div>
           </section>
           <input type="hidden" class="point__total-price" name="total-price" value="">
