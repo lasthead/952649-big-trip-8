@@ -23,19 +23,23 @@ api.getDestinations()
 export {destinations, offers};
 
 boardTrips.innerHTML = messageLoading;
-api.getPoints()
-  .then((points)=>{
+
+const renderPoints = () => {
+  api.getPoints()
+  .then((points) => {
     boardTrips.innerHTML = ``;
-    points.forEach((item)=>{
+    points.forEach((item) => {
+      console.log(item);
       tripEventInit(item);
     });
     filtersInit(filters, points);
     sortInit(sort, points);
-  }).catch((err) => {
+  }).
+  catch((err) => {
     boardTrips.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later. fetch error: ${err}`;
     throw err;
   });
-
+}
 const tripsContainer = boardTrips;
 const updateTrip = (trip, i, newTrip) => {
   trip = Object.assign({}, trip, newTrip);
@@ -43,18 +47,26 @@ const updateTrip = (trip, i, newTrip) => {
 };
 
 function addNewPoint() {
-  const NewPointData = {
-    type: ``,
-    dateFrom: new Date(),
-    dateTo: new Date(),
-    offers: [],
-    destination: {
-      pictures: []
-    }
-  };
+  const NewPointData = {};
   const newTripPoint = new TripEdit(NewPointData);
-
   tripsContainer.insertBefore(newTripPoint.render(), tripsContainer.firstChild);
+  newTripPoint.onSubmit = (newObject) => {
+    api.createPoint(newObject)
+      .then(() => {
+        const tripPoint = new Trip(newObject);
+        const tripPointEdit = new TripEdit(newObject);
+        tripsContainer.appendChild(tripPoint.render());
+        //tripsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
+        newTripPoint.unrender();
+        renderPoints();
+        //tripPointEdit.unrender();
+      });
+      // .catch((err) => {
+      //   boardTrips.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later. fetch error: ${err}`;
+      //   throw err;
+      // });
+  };
+
 }
 document.querySelector(`.trip-controls__new-event`).addEventListener(`click`, addNewPoint);
 
@@ -145,3 +157,4 @@ const sortInit = (sortData, trips) => {
   });
 };
 
+renderPoints();

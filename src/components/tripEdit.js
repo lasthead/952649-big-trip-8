@@ -2,18 +2,19 @@ import Component from './component';
 import flatpickr from "flatpickr";
 import {timeFormatter, travelTypeIcons} from "../store/const";
 import {destinations, offers} from "../main";
-import {_} from "lodash";
+import lodash from "lodash";
+
 export default class TripEdit extends Component {
   constructor(data) {
     super();
     this._id = (data && data.id) ? data.id : null;
-    this._travelType = data.travelType;
-    this._destination = data.destination;
-    this._dateFrom = data.dateFrom;
-    this._dateTo = data.dateTo;
-    this._price = data.price;
+    this._travelType = data.travelType ? data.travelType : ``;
+    this._destination = data.destination ? data.destination : ``;
+    this._dateFrom = data.dateFrom ? data.dateTo : new Date();
+    this._dateTo = data.dateTo ? data.dateTo : new Date();
+    this._price = data.price ? data.price : ``;
     this._offers = data.offers;
-    this._description = data.description;
+    this._description = data.description ? data.description : ``;
     this._pictures = data.pictures;
     this._element = null;
     this._onSubmit = null;
@@ -51,7 +52,6 @@ export default class TripEdit extends Component {
     let foundOffer = object.filter((item) => item.name === itemName)[0];
     return foundOffer;
   }
-
   _onResetTripForm() {
     return typeof this._onSubmit === `function` && this._onReset();
   }
@@ -120,7 +120,7 @@ export default class TripEdit extends Component {
           <div class="travel-way">
             <input value="${this._travelType}" name="travel-way-selected" type="hidden" class="visually-hidden">
 
-            <label class="travel-way__label" for="travel-way__toggle">${travelTypeIcons[this._travelType]}</label>
+            <label class="travel-way__label" for="travel-way__toggle">${this._travelType && travelTypeIcons[this._travelType]}</label>
             <input value="${this._travelType}" name="travel-way" type="checkbox" class="travel-way__toggle visually-hidden" id="travel-way__toggle">
             <div class="travel-way__select">
               <div class="travel-way__select-group">
@@ -130,9 +130,9 @@ export default class TripEdit extends Component {
           </div>
     
           <div class="point__destination-wrap">
-            <input value="${this._destination.name}" name="destination-selected" type="hidden" class="visually-hidden">
+            <input value="${ this._destination.name}" name="destination-selected" type="hidden" class="visually-hidden">
             <label class="point__destination-label" for="destination">Flight to</label>
-            <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination.name}" name="destination">
+            <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination && this._destination.name}" name="destination">
             <datalist id="destination-select">
               ${this._getDestinationOptions()}
             </datalist>
@@ -214,6 +214,7 @@ export default class TripEdit extends Component {
     if (evt.target.tagName === `INPUT`) {
       if (evt.target.value) {
         let newOfferTypeId = evt.target.value;
+
         let newTypePoint = _.find(offers, (item)=> item.id === Number(newOfferTypeId));
 
         this._offers = newTypePoint.offers;

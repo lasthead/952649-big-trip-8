@@ -50,7 +50,16 @@ export default class API {
       .then(toJSON)
       .then(AdapterTrips.parsePoint);
   }
-
+  createPoint(point) {
+    return this._load({
+      url: `points`,
+      method: Method.POST,
+      body: JSON.stringify(point),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then(toJSON)
+      .then(AdapterTrips.parsePoint);
+  }
   deletePoint({id}) {
     return this._load({url: `points/${id}`, method: Method.DELETE});
   }
