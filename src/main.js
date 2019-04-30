@@ -29,7 +29,6 @@ const renderPoints = () => {
   .then((points) => {
     boardTrips.innerHTML = ``;
     points.forEach((item) => {
-      console.log(item);
       tripEventInit(item);
     });
     filtersInit(filters, points);
@@ -59,12 +58,11 @@ function addNewPoint() {
         //tripsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
         newTripPoint.unrender();
         renderPoints();
-        //tripPointEdit.unrender();
+      })
+      .catch((err) => {
+        boardTrips.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later. fetch error: ${err}`;
+        throw err;
       });
-      // .catch((err) => {
-      //   boardTrips.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later. fetch error: ${err}`;
-      //   throw err;
-      // });
   };
 
 }
@@ -130,6 +128,7 @@ const sortTrips = (sortValue, trips) => {
 };
 
 const filtersInit = (filtersData, trips) => {
+  boardMainFilters.innerHTML = ``;
   filtersData.forEach((item)=>{
     const filter = new Filter(item);
     boardMainFilters.appendChild(filter.render());
@@ -144,6 +143,7 @@ const filtersInit = (filtersData, trips) => {
 };
 
 const sortInit = (sortData, trips) => {
+  boardMainSortButtons.innerHTML = ``;
   sortData.forEach((item)=>{
     const sortButton = new Sort(item);
     boardMainSortButtons.appendChild(sortButton.render());

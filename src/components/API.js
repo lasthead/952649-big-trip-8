@@ -54,7 +54,7 @@ export default class API {
     return this._load({
       url: `points`,
       method: Method.POST,
-      body: JSON.stringify(point),
+      body: JSON.stringify(AdapterTrips.toRAW(point)),
       headers: new Headers({'Content-Type': `application/json`})
     })
       .then(toJSON)

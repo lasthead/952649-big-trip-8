@@ -13,7 +13,22 @@ export default class AdapterTrips {
     this.travelType = data[`type`];
     this.offers = data[`offers`];
   }
-
+  static toRAW(data) {
+    return {
+      'id': data.id,
+      'type': data.travelType,
+      'destination': {
+        'name': data.destination.name,
+        'description': data.destination.description,
+        'pictures': [...data.destination.pictures.values()],
+      },
+      'date_from': data.dateFrom,
+      'date_to': data.dateTo,
+      'base_price': data.price,
+      'offers': [...data.offers.values()],
+      'is_favorite': data.isFavorite
+    };
+  }
   static parsePoint(data) {
     return new AdapterTrips(data);
   }
