@@ -49,14 +49,14 @@ const renderPoints = (points) => {
       });
       tripsContainer.appendChild(tripDayBlock);
     });
-    filtersInit(filters, points);
-    sortInit(sort, points);
   }
 };
 
 api.getPoints()
 .then((points) => {
   renderPoints(points);
+  filtersInit(filters, points);
+  sortInit(sort, points);
 }).
 catch((err) => {
   boardTrips.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later. fetch error: ${err}`;
@@ -158,6 +158,7 @@ const filtersInit = (filtersData, points) => {
     filter.onFilter = () => {
       boardTrips.innerHTML = ``;
       const filteredItems = filterSearch(item.name.toLowerCase(), points);
+      console.log(points);
       renderPoints(filteredItems);
     };
   });
