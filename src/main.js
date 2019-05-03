@@ -1,9 +1,11 @@
 
+import {cloneDeep} from 'lodash';
 import {boardTrips, boardMainFilters, boardMainSortButtons, messageLoading, calculatePrice} from "./store/const";
 import {filters, sort} from "./store/tripsData";
 import moment from "moment";
 import Trip from "./components/trip";
 import TripEdit from "./components/tripEdit";
+import TripDay from "./components/tripDay";
 import Filter from "./components/filter";
 import Sort from "./components/sort";
 import API from "./components/API";
@@ -24,21 +26,43 @@ export {destinations, offers};
 
 boardTrips.innerHTML = messageLoading;
 
-const renderPoints = () => {
-  api.getPoints()
-  .then((points) => {
+const renderPoints = (points) => {
+  if (points) {
+    points = cloneDeep(points);
+    const pointsDays = points.reduce((daysCollect, point) => {
+      const tripDay = moment(point.dateFrom).format(`MMM DD`);
+      if (!daysCollect[tripDay]) {
+        daysCollect[tripDay] = [];
+      }
+      daysCollect[tripDay].push(point);
+      return daysCollect;
+    }, {});
     boardTrips.innerHTML = ``;
-    points.forEach((item) => {
-      tripEventInit(item);
+    Object.keys(pointsDays).forEach((dateName, index) => {
+      const tripDay = new TripDay(dateName, index + 1);
+      const tripDayBlock = tripDay.render();
+      const tripDayPointsBlock = tripDayBlock.querySelector(`.trip-day__items`);
+
+      pointsDays[dateName].forEach((item) => {
+        const point = tripEventInit(item);
+        tripDayPointsBlock.appendChild(point.render());
+      });
+      tripsContainer.appendChild(tripDayBlock);
     });
     filtersInit(filters, points);
     sortInit(sort, points);
-  }).
-  catch((err) => {
-    boardTrips.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later. fetch error: ${err}`;
-    throw err;
-  });
-}
+  }
+};
+
+api.getPoints()
+.then((points) => {
+  renderPoints(points);
+}).
+catch((err) => {
+  boardTrips.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later. fetch error: ${err}`;
+  throw err;
+});
+
 const tripsContainer = boardTrips;
 const updateTrip = (trip, i, newTrip) => {
   trip = Object.assign({}, trip, newTrip);
@@ -53,9 +77,7 @@ function addNewPoint() {
     api.createPoint(newObject)
       .then(() => {
         const tripPoint = new Trip(newObject);
-        const tripPointEdit = new TripEdit(newObject);
         tripsContainer.appendChild(tripPoint.render());
-        //tripsContainer.replaceChild(tripPoint.element, tripPointEdit.element);
         newTripPoint.unrender();
         renderPoints();
       })
@@ -72,7 +94,6 @@ document.querySelector(`.trip-controls__new-event`).addEventListener(`click`, ad
 const tripEventInit = (trip)=>{
   const tripPoint = new Trip(trip);
   const tripPointEdit = new TripEdit(trip);
-  tripsContainer.appendChild(tripPoint.render());
   tripPoint.onClick = () => {
     tripPointEdit.render();
     tripsContainer.replaceChild(tripPointEdit.element, tripPoint.element);
@@ -98,6 +119,7 @@ const tripEventInit = (trip)=>{
         tripPointEdit.unrender(tripsContainer);
       });
   };
+  return tripPoint;
 };
 
 const filterSearch = (filterValue, trips) => {
@@ -114,45 +136,42 @@ const filterSearch = (filterValue, trips) => {
 
 const sortTrips = (sortValue, trips) => {
   switch (sortValue) {
-    case `sorting-event`:
+    case `event`:
       return trips.sort((a, b) => (a.id > b.id ? 1 : -1));
-    case `sorting-time`:
+    case `time`:
       return trips.sort((a, b) =>
         moment(a.timeStart) - moment(a.timeEnd) > moment(b.timeStart) - moment(b.timeEnd) ? 1 : -1
       );
-    case `sorting-price`:
+    case `price`:
       return trips.sort((a, b) => calculatePrice(a) < calculatePrice(b) ? 1 : -1);
     default:
       return trips;
   }
 };
 
-const filtersInit = (filtersData, trips) => {
+const filtersInit = (filtersData, points) => {
   boardMainFilters.innerHTML = ``;
+
   filtersData.forEach((item)=>{
     const filter = new Filter(item);
     boardMainFilters.appendChild(filter.render());
-    filter.onFilter = (event) => {
+    filter.onFilter = () => {
       boardTrips.innerHTML = ``;
-      const filteredItems = filterSearch(event.target.value, trips);
-      filteredItems.forEach((filteredItem)=>{
-        tripEventInit(filteredItem);
-      });
+      const filteredItems = filterSearch(item.name.toLowerCase(), points);
+      renderPoints(filteredItems);
     };
   });
 };
 
-const sortInit = (sortData, trips) => {
+const sortInit = (sortData, points) => {
   boardMainSortButtons.innerHTML = ``;
   sortData.forEach((item)=>{
     const sortButton = new Sort(item);
     boardMainSortButtons.appendChild(sortButton.render());
-    sortButton.onClick = (event) => {
+    sortButton.onClick = () => {
       boardTrips.innerHTML = ``;
-      const sortItems = sortTrips(event.target.value, trips);
-      sortItems.forEach((filteredItem)=>{
-        tripEventInit(filteredItem);
-      });
+      const sortItems = sortTrips(item.name.toLowerCase(), points);
+      renderPoints(sortItems);
     };
   });
 };

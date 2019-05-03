@@ -1,6 +1,6 @@
 
 export const mainFilter = document.querySelector(`.trip-filter`);
-export const boardTrips = document.querySelector(`.trip-day__items`);
+export const boardTrips = document.querySelector(`.trip-points`);
 export const boardMainFilters = document.querySelector(`.trip-filter`);
 export const boardMainSortButtons = document.querySelector(`.trip-sorting`);
 export const messageLoading = `Loading route...`;

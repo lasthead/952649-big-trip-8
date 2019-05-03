@@ -9,7 +9,7 @@ export default class Sort extends Component {
     this._onSort = null;
   }
   get template() {
-    return `<input type="radio" name="trip-sorting" id="sorting-${this._name.toLowerCase()}" value="sorting-${this._name.toLowerCase()}" ${this._checked ? `checked` : ``}>
+    return `<input type="radio" name="trip-sorting" id="sorting-${this._name.toLowerCase()}" value="${this._name.toLowerCase()}" ${this._checked ? `checked` : ``}>
     <label class="trip-sorting__item trip-sorting__item--event" for="sorting-${this._name.toLowerCase()}">${this._name}</label>`;
   }
   set onClick(fn) {
