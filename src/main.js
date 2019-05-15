@@ -9,11 +9,29 @@ import TripDay from "./components/tripDay";
 import Filter from "./components/filter";
 import Sort from "./components/sort";
 import API from "./components/API";
+import {moneyChart} from "./components/Statistic";
+
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
 const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
+const StatisticElement = document.querySelector(`a[href="#stats"]`);
+const TableElement = document.querySelector(`a[href="#table"]`);
 let destinations = [];
 let offers = [];
+moneyChart;
+const StatisticHandlerOption = function (e) {
+  e.preventDefault();
+  document.querySelector(`.statistic`).classList.remove(`visually-hidden`);
+  document.querySelector(`main`).classList.add(`visually-hidden`);
+};
+const TableHandlerOption = function (e) {
+  e.preventDefault();
+  document.querySelector(`.statistic`).classList.add(`visually-hidden`);
+  document.querySelector(`main`).classList.remove(`visually-hidden`);
+};
+StatisticElement.addEventListener(`click`, StatisticHandlerOption);
+TableElement.addEventListener(`click`, TableHandlerOption);
+
 api.getOffers()
   .then((response)=> {
     offers = response;
@@ -28,7 +46,6 @@ boardTrips.innerHTML = messageLoading;
 
 const renderPoints = (points) => {
   if (points) {
-    points = cloneDeep(points);
     const pointsDays = points.reduce((daysCollect, point) => {
       const tripDay = moment(point.dateFrom).format(`MMM DD`);
       if (!daysCollect[tripDay]) {
@@ -97,7 +114,7 @@ const tripEventInit = (trip)=>{
   const tripPointEdit = new TripEdit(trip);
   tripPoint.onClick = () => {
     tripPointEdit.render();
-    tripsContainer.replaceChild(tripPointEdit.element, tripPoint.element);
+    tripsContainer.querySelector(`.trip-day__items`).replaceChild(tripPointEdit.element, tripPoint.element);
     tripPoint.unrender();
   };
   tripPointEdit.onSubmit = (newObject) => {
