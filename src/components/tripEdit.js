@@ -4,6 +4,10 @@ import {timeFormatter, travelTypeIcons} from "../store/const";
 import {destinations, offers} from "../main";
 import lodash from "lodash";
 
+const KeyCode = {
+  ESC: 27
+};
+
 export default class TripEdit extends Component {
   constructor(data) {
     super();
@@ -19,8 +23,16 @@ export default class TripEdit extends Component {
     this._element = null;
     this._onSubmit = null;
     this._onReset = null;
+    this._onCancel = null;
   }
-
+  _cancelHandler(evt) {
+    if (typeof this._onCancel === `function`) {
+      if (evt.keyCode === KeyCode.ESC) {
+        document.removeEventListener(`keydown`, this._cancelHandler);
+        this._onCancel(this._element);
+      }
+    }
+  }
   _processForm(formData) {
     const entry = {
       pointId: this._id,
@@ -250,6 +262,7 @@ export default class TripEdit extends Component {
   }
 
   bind() {
+    document.addEventListener(`keydown`, this._cancelHandler.bind(this));
     this._element.querySelector(`button[type="submit"]`)
       .addEventListener(`click`, this._onSaveTripForm.bind(this));
     this._element.querySelector(`button[type="reset"]`)
@@ -274,5 +287,8 @@ export default class TripEdit extends Component {
 
   set onDelete(fn) {
     this._onDelete = fn;
+  }
+  set onCancel(fn) {
+    this._onCancel = fn;
   }
 }

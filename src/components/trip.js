@@ -14,9 +14,10 @@ export default class Trip extends Component {
     this._price = data.price;
     this._offers = data.offers;
     this._onClick = null;
+    this._modelData = data;
   }
   _onEditButtonClick() {
-    return typeof this._onClick === `function` && this._onClick();
+    return typeof this._onClick === `function` && this._onClick(this._element, this._modelData);
   }
   get template() {
     return `
