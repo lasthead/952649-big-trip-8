@@ -125,7 +125,6 @@ const clickPointHandler = (original, trip) => {
     points.push(newPoint);
     const sortPoints = filterSearch(document.querySelector(`[name="trip-sorting"]:checked`).value.toLowerCase(), points);
     const filteredPoints = filterSearch(document.querySelector(`[name="filter"]:checked`).value.toLowerCase(), sortPoints);
-    console.log(filteredPoints);
     renderPoints(filteredPoints);
   };
   tripPointEdit.onCancel = () => {

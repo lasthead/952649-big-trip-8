@@ -2,6 +2,7 @@
 import {timeFormatter, travelTypeIcons, strLetterToCapital} from '../store/const';
 import tripOffers from './tripComponents/tripOffers';
 import Component from './component';
+import createElement from "./tripComponents/createElement";
 
 export default class Trip extends Component {
   constructor(data) {
@@ -18,6 +19,11 @@ export default class Trip extends Component {
   }
   _onEditButtonClick() {
     return typeof this._onClick === `function` && this._onClick(this._element, this._modelData);
+  }
+  render() {
+    this._element = createElement(this.template).querySelector(`article`);
+    this.bind();
+    return this._element;
   }
   get template() {
     return `

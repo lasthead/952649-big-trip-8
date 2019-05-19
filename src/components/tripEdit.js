@@ -3,6 +3,7 @@ import flatpickr from "flatpickr";
 import {timeFormatter, travelTypeIcons} from "../store/const";
 import {destinations, offers} from "../main";
 import lodash from "lodash";
+import createElement from "./tripComponents/createElement";
 
 const KeyCode = {
   ESC: 27
@@ -14,6 +15,7 @@ export default class TripEdit extends Component {
     this._id = (data && data.id) ? data.id : null;
     this._travelType = data.travelType ? data.travelType : ``;
     this._destination = data.destination ? data.destination : ``;
+    this._dayPoint = data.dateFrom;
     this._dateFrom = data.dateFrom ? data.dateTo : new Date();
     this._dateTo = data.dateTo ? data.dateTo : new Date();
     this._price = data.price ? data.price : ``;
@@ -38,6 +40,8 @@ export default class TripEdit extends Component {
       pointId: this._id,
       travelType: {},
       destination: {},
+      dateFrom: this._dateFrom,
+      dateTo: this._dateTo,
       time: ``,
       price: ``,
       offers: [],
@@ -45,6 +49,7 @@ export default class TripEdit extends Component {
     };
     const tripEditMapper = this.createMapper(entry);
     for (const pair of formData.entries()) {
+      console.log(pair);
       const [property, value] = pair;
       if (tripEditMapper[property]) {
         tripEditMapper[property](value);
@@ -80,34 +85,42 @@ export default class TripEdit extends Component {
   }
 
   _initFlatPickr() {
+    flatpickr(this._element.querySelector(`.point__input`), {
+      altInput: true,
+      altFormat: `M d`,
+      dateFormat: `Z`,
+      'defaultDate': new Date(this._dateFrom),
+      'minDate': new Date(this._dateFrom),
+      onChange: (selectedDates) => {
+        this._dayPoint = selectedDates[0];
+      },
+    });
     flatpickr(this._element.querySelector(`.date__from`), {
-      'mode': `range`,
       'enableTime': true,
       'dateFormat': `H:i`,
-      'defaultDate': [this._dateFrom],
-      'minDate': `today`,
+      'defaultDate': new Date(this._dayPoint),
+      'minDate': new Date(this._dateFrom),
       'time_24hr': true,
-      'appendTo': this._element,
-      onChange(selectedDates) {
+      onChange: (selectedDates) => {
         this._dateFrom = selectedDates[0];
-        this._dateTo = selectedDates[1];
       },
     });
     flatpickr(this._element.querySelector(`.date__to`), {
-      'mode': `range`,
       'enableTime': true,
       'dateFormat': `H:i`,
-      'defaultDate': [this._dateTo],
-      'minDate': `today`,
+      'defaultDate': new Date(this._dateTo),
+      'minDate': new Date(this._dateFrom),
       'time_24hr': true,
-      'appendTo': this._element,
-      onChange(selectedDates) {
-        this._dateFrom = selectedDates[0];
+      onChange: (selectedDates) => {
         this._dateTo = selectedDates[1];
       },
     });
   }
-
+  render() {
+    this._element = createElement(this.template).querySelector(`article`);
+    this.bind();
+    return this._element;
+  }
   createMapper(target) {
     return {
       [`travel-way-selected`]: (value) => (target.travelType = value),
@@ -144,7 +157,7 @@ export default class TripEdit extends Component {
           <div class="point__destination-wrap">
             <input value="${ this._destination.name}" name="destination-selected" type="hidden" class="visually-hidden">
             <label class="point__destination-label" for="destination">Flight to</label>
-            <input class="point__destination-input" list="destination-select" id="destination" value="${this._destination && this._destination.name}" name="destination">
+            <input required class="point__destination-input" list="destination-select" id="destination" value="${this._destination && this._destination.name}" name="destination">
             <datalist id="destination-select">
               ${this._getDestinationOptions()}
             </datalist>
@@ -159,7 +172,7 @@ export default class TripEdit extends Component {
           <label class="point__price">
             write price
             <span class="point__price-currency">€</span>
-            <input class="point__input" type="text" value="${this._price}" name="price">
+            <input required class="point__input" type="number" value="${this._price}" name="price">
           </label>
     
           <div class="point__buttons">
@@ -263,8 +276,8 @@ export default class TripEdit extends Component {
 
   bind() {
     document.addEventListener(`keydown`, this._cancelHandler.bind(this));
-    this._element.querySelector(`button[type="submit"]`)
-      .addEventListener(`click`, this._onSaveTripForm.bind(this));
+    this._element.querySelector(`form`)
+      .addEventListener(`submit`, this._onSaveTripForm.bind(this));
     this._element.querySelector(`button[type="reset"]`)
       .addEventListener(`click`, this._onResetTripForm.bind(this));
     this._initFlatPickr();
