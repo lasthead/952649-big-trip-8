@@ -21,12 +21,12 @@ export const sort = [
   {
     id: `0`,
     name: `Event`,
-    isChecked: true,
+    isChecked: false,
   },
   {
     id: `1`,
     name: `Time`,
-    isChecked: false,
+    isChecked: true,
   },
   {
     id: `2`,

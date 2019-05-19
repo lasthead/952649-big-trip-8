@@ -16,7 +16,7 @@ export default class Filter extends Component {
   }
   get template() {
     return `
-       <input type="radio" id="filter-${rmSpaces(this._name.toLowerCase())}" name="filter" value="${this._name.toLowerCase()}" >
+       <input type="radio" id="filter-${rmSpaces(this._name.toLowerCase())}" ${this._checked ? `checked` : ``} name="filter" value="${this._name.toLowerCase()}" >
        <label class="trip-filter__item" for="filter-${rmSpaces(this._name.toLowerCase())}">${this._name}</label>    
     `;
   }

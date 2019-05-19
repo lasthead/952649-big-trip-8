@@ -2,10 +2,10 @@
 import Component from './component';
 
 export default class Sort extends Component {
-  constructor({name, checked = false}) {
+  constructor({name, isChecked = false}) {
     super();
     this._name = name;
-    this._checked = checked;
+    this._checked = isChecked;
     this._onSort = null;
   }
   get template() {

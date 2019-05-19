@@ -74,9 +74,12 @@ const initPointsList = () => {
   api.getPoints()
     .then((pointsList) => {
       points = pointsList;
-      renderPoints(points);
       filtersInit(filters, points);
       sortInit(sort, points);
+      const sortPoints = filterSearch(document.querySelector(`[name="trip-sorting"]:checked`).value.toLowerCase(), points);
+      const filteredPoints = filterSearch(document.querySelector(`[name="filter"]:checked`).value.toLowerCase(), sortPoints);
+      console.log(filteredPoints);
+      renderPoints(filteredPoints);
     }).catch((err) => {
     boardTrips.innerHTML = `Something went wrong while loading your route info. Check your connection or try again later. fetch error: ${err}`;
     throw err;
@@ -120,7 +123,10 @@ const clickPointHandler = (original, trip) => {
     points = removePoint(points, trip.id);
     let newPoint = updateTrip(trip, trip.id, newObject);
     points.push(newPoint);
-    renderPoints(points);
+    const sortPoints = filterSearch(document.querySelector(`[name="trip-sorting"]:checked`).value.toLowerCase(), points);
+    const filteredPoints = filterSearch(document.querySelector(`[name="filter"]:checked`).value.toLowerCase(), sortPoints);
+    console.log(filteredPoints);
+    renderPoints(filteredPoints);
   };
   tripPointEdit.onCancel = () => {
     replaceElements(tripPointEdit.element, original);
@@ -175,7 +181,6 @@ const sortTrips = (sortValue, trips) => {
 
 const filtersInit = (filtersData, pointsList) => {
   boardMainFilters.innerHTML = ``;
-
   filtersData.forEach((item)=>{
     const filter = new Filter(item);
     boardMainFilters.appendChild(filter.render());
@@ -194,8 +199,8 @@ const sortInit = (sortData, pointsList) => {
     boardMainSortButtons.appendChild(sortButton.render());
     sortButton.onClick = () => {
       boardTrips.innerHTML = ``;
-      const sortItems = sortTrips(item.name.toLowerCase(), pointsList);
-      renderPoints(sortItems);
+      const sortedItems = sortTrips(item.name.toLowerCase(), pointsList);
+      renderPoints(sortedItems);
     };
   });
 };
