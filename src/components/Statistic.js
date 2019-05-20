@@ -29,8 +29,8 @@ export const moneyChart = new Chart(moneyCtx, {
           size: 13
         },
         color: `#000000`,
-        anchor: 'end',
-        align: 'start',
+        anchor: `end`,
+        align: `start`,
         formatter: (val) => `€ ${val}`
       }
     },
@@ -94,8 +94,8 @@ const transportChart = new Chart(transportCtx, {
           size: 13
         },
         color: `#000000`,
-        anchor: 'end',
-        align: 'start',
+        anchor: `end`,
+        align: `start`,
         formatter: (val) => `${val}x`
       }
     },

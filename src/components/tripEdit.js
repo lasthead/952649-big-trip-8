@@ -2,9 +2,8 @@ import Component from './component';
 import flatpickr from "flatpickr";
 import {timeFormatter, travelTypeIcons} from "../store/const";
 import {destinations, offers} from "../main";
-import lodash from "lodash";
 import createElement from "./tripComponents/createElement";
-
+import {_} from 'lodash';
 const KeyCode = {
   ESC: 27
 };
@@ -49,7 +48,6 @@ export default class TripEdit extends Component {
     };
     const tripEditMapper = this.createMapper(entry);
     for (const pair of formData.entries()) {
-      console.log(pair);
       const [property, value] = pair;
       if (tripEditMapper[property]) {
         tripEditMapper[property](value);
@@ -86,12 +84,12 @@ export default class TripEdit extends Component {
 
   _initFlatPickr() {
     flatpickr(this._element.querySelector(`.point__input`), {
-      altInput: true,
-      altFormat: `M d`,
-      dateFormat: `Z`,
+      'altInput': true,
+      'altFormat': `M d`,
+      'dateFormat': `Z`,
       'defaultDate': new Date(this._dateFrom),
       'minDate': new Date(this._dateFrom),
-      onChange: (selectedDates) => {
+      'onChange': (selectedDates) => {
         this._dayPoint = selectedDates[0];
       },
     });
@@ -101,7 +99,7 @@ export default class TripEdit extends Component {
       'defaultDate': new Date(this._dayPoint),
       'minDate': new Date(this._dateFrom),
       'time_24hr': true,
-      onChange: (selectedDates) => {
+      'onChange': (selectedDates) => {
         this._dateFrom = selectedDates[0];
       },
     });
@@ -111,7 +109,7 @@ export default class TripEdit extends Component {
       'defaultDate': new Date(this._dateTo),
       'minDate': new Date(this._dateFrom),
       'time_24hr': true,
-      onChange: (selectedDates) => {
+      'onChange': (selectedDates) => {
         this._dateTo = selectedDates[1];
       },
     });
