@@ -109,7 +109,9 @@ function addNewPoint() {
         throw err;
       });
   };
-
+  newTripPoint.onCancel = () => {
+    newTripPoint.unrender(tripsContainer);
+  };
 }
 document.querySelector(`.trip-controls__new-event`).addEventListener(`click`, addNewPoint);
 
