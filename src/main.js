@@ -9,7 +9,16 @@ import TripDay from "./components/tripDay";
 import Filter from "./components/filter";
 import Sort from "./components/sort";
 import API from "./components/API";
-import {moneyChart} from "./components/Statistic";
+import Statistic from "./components/Statistic";
+
+const moneyCtx = document.querySelector(`.statistic__money`);
+const transportCtx = document.querySelector(`.statistic__transport`);
+const timeSpendCtx = document.querySelector(`.statistic__time-spend`);
+const BAR_HEIGHT = 55;
+moneyCtx.height = BAR_HEIGHT * 6;
+transportCtx.height = BAR_HEIGHT * 4;
+timeSpendCtx.height = BAR_HEIGHT * 4;
+
 
 const AUTHORIZATION = `Basic dXNlckBwYXNzd29yZAo=${Math.random()}`;
 const END_POINT = `https://es8-demo-srv.appspot.com/big-trip`;
@@ -19,11 +28,13 @@ const TableElement = document.querySelector(`a[href="#table"]`);
 let destinations = [];
 let offers = [];
 let points = [];
-moneyChart;
+
 const StatisticHandlerOption = function (e) {
   e.preventDefault();
   document.querySelector(`.statistic`).classList.remove(`visually-hidden`);
   document.querySelector(`main`).classList.add(`visually-hidden`);
+  renderStats();
+  //moneyChart;
 };
 const TableHandlerOption = function (e) {
   e.preventDefault();
@@ -44,6 +55,14 @@ api.getDestinations()
 export {destinations, offers};
 
 boardTrips.innerHTML = messageLoading;
+
+const renderStats = () => {
+  const moneyChartCfg = {
+    chartTitle: `MONEY`,
+    canvas: moneyCtx,
+  };
+  new Statistic(moneyChartCfg).render();
+};
 
 const renderPoints = (pointsList) => {
   if (pointsList) {
